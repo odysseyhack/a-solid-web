@@ -2,6 +2,9 @@ import React from "react";
 import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { AuthButton } from "@solid/react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -85,13 +88,19 @@ class Profile extends React.Component {
 
   render() {
     return (
-      <div>
-        <AuthButton
-          popup="popup.html"
-          login="Login here!"
-          logout="Logout here!"
-        />
-      </div>
+      <Container>
+        <Row>
+          <Col lg={3} md={3} sm={3} xs={3}/>
+          <Col lg={6} md={6} sm={6} xs={6}>
+            <AuthButton
+              popup="popup.html"
+              login="Login here!"
+              logout="Logout here!"
+            />
+          </Col>
+          <Col lg={3} md={3} sm={3} xs={3}/>
+        </Row>
+      </Container>
     );
   }
 }
