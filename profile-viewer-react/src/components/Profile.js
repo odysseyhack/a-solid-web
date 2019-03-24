@@ -1,7 +1,7 @@
 import React from "react";
 import rdf from "rdflib";
 import auth from "solid-auth-client";
-import { AuthButton } from "@solid/react";
+import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -80,7 +80,23 @@ class Profile extends React.Component {
         });
       }
     });
-  }
+	}
+	
+	async login() {
+		const session = await auth.currentSession();
+		if (!session)
+			await auth.login("https://solid.community");
+		else
+			alert(`Logged in as ${session.webId}`);
+	}
+
+	async logout(){
+		auth.logout().then(() => {
+			this.setState({
+				webId: ""
+			})
+		})
+	}
 
   componentDidMount() {
     this.fetchUser();
@@ -92,11 +108,7 @@ class Profile extends React.Component {
         <Row>
           <Col lg={3} md={3} sm={3} xs={3}/>
           <Col lg={6} md={6} sm={6} xs={6}>
-            <AuthButton
-              popup="popup.html"
-              login="Login here!"
-              logout="Logout here!"
-            />
+            {this.state.webId !== "" ? <Button onClick={this.logout.bind(this)}>Logout</Button> : <Button onClick={this.login.bind(this)}>Login</Button>}
           </Col>
           <Col lg={3} md={3} sm={3} xs={3}/>
         </Row>
