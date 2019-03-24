@@ -106,11 +106,7 @@ class Profile extends React.Component {
     return (
       <Container>
         <Row>
-          <Col lg={3} md={3} sm={3} xs={3}/>
-          <Col lg={6} md={6} sm={6} xs={6}>
             {this.state.webId !== "" ? <Button onClick={this.logout.bind(this)}>Logout</Button> : <Button onClick={this.login.bind(this)}>Login</Button>}
-          </Col>
-          <Col lg={3} md={3} sm={3} xs={3}/>
         </Row>
       </Container>
     );
