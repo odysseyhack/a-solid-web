@@ -95,7 +95,7 @@ class Profile extends React.Component {
         });
       }
     });
-  }
+	}
 	
 	setProfilePicture = e => {
     var filePath = e.target.files[0];
