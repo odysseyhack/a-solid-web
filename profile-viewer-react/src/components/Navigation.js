@@ -6,7 +6,7 @@ import FormControl from "react-bootstrap/FormControl";
 import { NavLink } from "react-router-dom"; 
 import { Button } from "yoda-design-system";
 
-const Navigation = () => {
+const Navigation = (props) => {
     return(
         <div style={{padding: "2%"}}>
             <Navbar bg="dark" variant="dark" fixed="top">
