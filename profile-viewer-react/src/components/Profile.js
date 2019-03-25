@@ -3,7 +3,9 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
-import ProfilePicture from "./functional_components/ProfilePicture"
+import ProfilePicture from "./functional_components/ProfilePicture";
+import ProfileField from "./functional_components/ProfileField"; 
+import FormControl from "react-bootstrap/FormControl";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -20,7 +22,10 @@ class Profile extends React.Component {
       emails: [],
       job: "",
       bio: "",
-      telephones: []
+      telephones: [], 
+      currentNameValue: "",
+      newNameValue: "",
+      editMode: false
     };
 	}
 
@@ -90,7 +95,10 @@ class Profile extends React.Component {
             emails: emails,
             job: jobValue,
             bio: bioValue,
-            telephones: telephones
+            telephones: telephones, 
+            currentNameValue: nameValue,
+            newNameValue: nameValue,
+            editMode: false
           });
         });
       }
@@ -146,11 +154,43 @@ class Profile extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
+  applyNameChanges(){
+    const store = rdf.graph();
+    const updater = new rdf.UpdateManager(store);
+
+    var del;
+    var ins;
+
+    console.log(this.state.currentValue); 
+
+    del = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.currentNameValue), rdf.sym(this.state.webId).doc());
+    ins = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.newNameValue), rdf.sym(this.state.webId).doc());
+
+    updater.update(del, ins, (uri, ok, message) => {
+        if(ok) {
+            let newValue = this.state.newNameValue;
+            this.setState({editMode: false, currentNameValue: newValue});
+        }
+        else alert(message);
+    });
+    this.setState({editMode: false});
+  }
+
+  getNewNameValue(e){
+      this.setState({newNameValue: e.target.value})
+  }
+
+  toggleEditMode(){
+      this.setState({editMode: !this.state.editMode});
+  }
+
   componentDidMount() {
     this.fetchUser();
   }
 
   render() {
+    let nameSlotMarkup = (this.state.editMode) ? <FormControl placeholder={this.state.currentNameValue} onChange={this.getNewNameValue.bind(this)} onBlur={this.applyNameChanges.bind(this)} defaultValue={this.state.currentNameValue}></FormControl> : <p onClick={this.toggleEditMode.bind(this)}>{this.state.currentNameValue}</p>
+
     return (
       <Container>
 				<Row>
@@ -167,6 +207,11 @@ class Profile extends React.Component {
           ) : (
 								<Button onClick={this.login.bind(this)}>Login</Button>
           )}
+        </Row>
+        <Row>
+          <Col>
+            <ProfileField webId={this.state.webId} name={this.state.name} nameSlotMarkup={nameSlotMarkup}/>
+          </Col>
         </Row>
       </Container>
     );
