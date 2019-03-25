@@ -10,7 +10,7 @@ const Navigation = (props) => {
     return(
         <div style={{padding: "2%"}}>
             <Navbar bg="dark" variant="dark" fixed="top">
-                <Navbar.Brand></Navbar.Brand>
+                <Navbar.Brand><img src="favicon.ico" width="30" height="30" alt="Solid logo"/></Navbar.Brand>
                 <Nav className="mr-auto">
                     <NavLink to="/">Profile</NavLink>
                 </Nav>
