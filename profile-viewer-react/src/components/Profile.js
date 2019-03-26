@@ -16,7 +16,7 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webId: "",
+      webId: undefined,
       name: "",
       picture: "",
       emails: [],
@@ -30,20 +30,11 @@ class Profile extends React.Component {
     };
   }
 
-  async logout() {
-    auth.logout().then(() => {
-      this.setState({
-        webId: ""
-      });
-    });
-  }
-
   fetchUser = () => {
     auth.trackSession(session => {
       if (!session) {
         console.log("You are not logged in");
       } else {
-        console.log("You are logged in... Fetching your data now");
         const webId = session.webId;
 
         const store = rdf.graph();
@@ -108,7 +99,7 @@ class Profile extends React.Component {
     var store = rdf.graph();
     var fetcher = new rdf.Fetcher(store);
 
-    let webId = this.state.webId;
+    let webId = this.props.webId;
     let currentPicture = this.state.picture;
 
     var reader = new FileReader();
@@ -160,16 +151,16 @@ class Profile extends React.Component {
     var ins;
 
     del = rdf.st(
-      rdf.sym(this.state.webId),
+      rdf.sym(this.props.webId),
       FOAF("name"),
       rdf.lit(this.state.name),
-      rdf.sym(this.state.webId).doc()
+      rdf.sym(this.props.webId).doc()
     );
     ins = rdf.st(
-      rdf.sym(this.state.webId),
+      rdf.sym(this.props.webId),
       FOAF("name"),
       rdf.lit(this.state.newName),
-      rdf.sym(this.state.webId).doc()
+      rdf.sym(this.props.webId).doc()
     );
 
     var updatePromise = new Promise((resolve, reject) => {
@@ -202,16 +193,16 @@ class Profile extends React.Component {
     var ins;
 
     del = rdf.st(
-      rdf.sym(this.state.webId),
+      rdf.sym(this.props.webId),
       VCARD("note"),
       rdf.lit(this.state.bio),
-      rdf.sym(this.state.webId).doc()
+      rdf.sym(this.props.webId).doc()
     );
     ins = rdf.st(
-      rdf.sym(this.state.webId),
+      rdf.sym(this.props.webId),
       VCARD("note"),
       rdf.lit(this.state.newBio),
-      rdf.sym(this.state.webId).doc()
+      rdf.sym(this.props.webId).doc()
     );
 
     var updatePromise = new Promise((resolve, reject) => {
@@ -241,67 +232,65 @@ class Profile extends React.Component {
   }
 
   render() {
-    let nameSlotMarkup =
-      this.state.name ? (
-        <NameSlot
-          name={this.state.name}
-          editMode={this.state.editName}
-          onBlur={this.applyNameChanges.bind(this)}
-          onChange={this.getNewName.bind(this)}
-          onClick={this.toggleEditName.bind(this)}
-        />
-      ) : (
-        <NameSlot
-          name="You did not enter your name yet..."
-          editMode={this.state.editName}
-          onBlur={this.applyNameChanges.bind(this)}
-          onChange={this.getNewName.bind(this)}
-          onClick={this.toggleEditName.bind(this)}
-        />
-      );
+    let nameSlotMarkup = this.state.name ? (
+      <NameSlot
+        name={this.state.name}
+        editMode={this.state.editName}
+        onBlur={this.applyNameChanges.bind(this)}
+        onChange={this.getNewName.bind(this)}
+        onClick={this.toggleEditName.bind(this)}
+      />
+    ) : (
+      <NameSlot
+        name="You did not enter your name yet..."
+        editMode={this.state.editName}
+        onBlur={this.applyNameChanges.bind(this)}
+        onChange={this.getNewName.bind(this)}
+        onClick={this.toggleEditName.bind(this)}
+      />
+    );
 
-    let bioSlotMarkup =
-      this.state.bio ? (
-        <BioSlot
-          bio={this.state.bio}
-          editMode={this.state.editBio}
-          onBlur={this.applyBioChanges.bind(this)}
-          onChange={this.getNewBio.bind(this)}
-          onClick={this.toggleEditBio.bind(this)}
-        />
-      ) : (
-        <BioSlot
-          bio="You do not have a bio yet..."
-          editMode={this.state.editBio}
-          onBlur={this.applyBioChanges.bind(this)}
-          onChange={this.getNewBio.bind(this)}
-          onClick={this.toggleEditBio.bind(this)}
-        />
-      );
-    
-    console.log(bioSlotMarkup)
+    let bioSlotMarkup = this.state.bio ? (
+      <BioSlot
+        bio={this.state.bio}
+        editMode={this.state.editBio}
+        onBlur={this.applyBioChanges.bind(this)}
+        onChange={this.getNewBio.bind(this)}
+        onClick={this.toggleEditBio.bind(this)}
+      />
+    ) : (
+      <BioSlot
+        bio="You do not have a bio yet..."
+        editMode={this.state.editBio}
+        onBlur={this.applyBioChanges.bind(this)}
+        onChange={this.getNewBio.bind(this)}
+        onClick={this.toggleEditBio.bind(this)}
+      />
+    );
 
     return (
       <Container>
-        <Row>
-          <Col>
-            <ProfilePicture
-              picture={this.state.picture}
-              onChange={this.setProfilePicture}
-            />
-          </Col>
-          <Col>
-            {nameSlotMarkup}
-            {bioSlotMarkup}
-          </Col>
-        </Row>
-        <Row>
-          {this.state.webId !== "" ? (
-            <Button onClick={this.logout.bind(this)}>Logout</Button>
-          ) : (
-            ""
-          )}
-        </Row>
+        {this.props.webId ? (
+          <div>
+            <Row>
+              <Col>
+                <ProfilePicture
+                  picture={this.state.picture}
+                  onChange={this.setProfilePicture}
+                />
+              </Col>
+              <Col>
+                {nameSlotMarkup}
+                {bioSlotMarkup}
+              </Col>
+            </Row>
+            <Row>
+              <Button onClick={this.props.logout}>Logout</Button>
+            </Row>
+          </div>
+        ) : (
+          <p>You are not logged in...</p>
+        )}
       </Container>
     );
   }

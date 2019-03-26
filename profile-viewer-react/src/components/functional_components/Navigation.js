@@ -1,6 +1,5 @@
 import React from "react";
 import rdf from "rdflib";
-import auth from "solid-auth-client";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
@@ -14,29 +13,10 @@ class Navigation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webId: "",
+      webId: props.webId,
       friendToAdd: "",
       canAddFriend: false
     };
-  }
-
-  async login() {
-    const session = await auth.currentSession();
-    if (!session) await auth.login("https://solid.community");
-    else alert(`Logged in as ${session.webId}`);
-  }
-
-  fetchUser() {
-    auth.trackSession(session => {
-      if (!session) {
-        console.log("You are not logged in");
-      } else {
-        console.log("You are logged in... Fetching your data now");
-        this.setState({
-          webId: session.webId
-        });
-      }
-    });
   }
 
   changeFriendToAdd(e) {
@@ -64,7 +44,7 @@ class Navigation extends React.Component {
   }
 
   addFriend() {
-    let webId = this.state.webId;
+    let webId = this.props.webId;
     let friendToAdd = this.state.friendToAdd;
     console.log(friendToAdd);
     const store = rdf.graph();
@@ -83,11 +63,8 @@ class Navigation extends React.Component {
     });
   }
 
-  componentDidMount() {
-    this.fetchUser();
-  }
-
   render() {
+    console.log(this.props.webId)
     let addFriendMarkup = this.state.canAddFriend ? (
       <div>
         <FormControl
@@ -120,10 +97,10 @@ class Navigation extends React.Component {
             <NavLink to="/">Profile</NavLink>
           </Nav>
           <Form inline>
-            {this.state.webId !== "" ? (
+            {this.props.webId ? (
               addFriendMarkup
             ) : (
-              <Button onClick={this.login.bind(this)}>Login</Button>
+              <Button onClick={this.props.login}>Login</Button>
             )}
           </Form>
         </Navbar>
