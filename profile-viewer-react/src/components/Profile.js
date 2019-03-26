@@ -27,12 +27,6 @@ class Profile extends React.Component {
     };
   }
 
-  async login() {
-    const session = await auth.currentSession();
-    if (!session) await auth.login("https://solid.community");
-    else alert(`Logged in as ${session.webId}`);
-  }
-
   async logout() {
     auth.logout().then(() => {
       this.setState({
@@ -230,11 +224,7 @@ class Profile extends React.Component {
           </Col>
         </Row>
         <Row>
-          {this.state.webId !== "" ? (
-            <Button onClick={this.logout.bind(this)}>Logout</Button>
-          ) : (
-            <Button onClick={this.login.bind(this)}>Login</Button>
-          )}
+          {this.state.webId !== "" ? <Button onClick={this.logout.bind(this)}>Logout</Button> : ""}
         </Row>
       </Container>
     );
