@@ -18,7 +18,6 @@ class App extends React.Component {
         console.log("You are not logged in");
       } else {
         console.log("You are logged in... Fetching your data now");
-        console.log(session);
         this.setState({
           webId: session.webId
         });

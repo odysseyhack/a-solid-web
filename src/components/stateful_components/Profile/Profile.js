@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import ProfilePicture from "../../functional_components/ProfilePicture/ProfilePicture";
 import NameSlot from "../../functional_components/NameSlot/NameSlot";
 import BioSlot from "../../functional_components/BioSlot/BioSlot";
+import EmailSlot from "../../functional_components/EmailSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -26,7 +27,9 @@ class Profile extends React.Component {
       newName: "",
       editName: false,
       newBio: "",
-      editBio: false
+      editBio: false,
+      newEmail: "",
+      editEmail: false
     };
   }
 
@@ -227,6 +230,53 @@ class Profile extends React.Component {
     this.setState({ editBio: !this.state.editBio });
   }
 
+  applyEmailChanges(e) {
+    const oldEmail = e.target.placeholder;
+    const oldEmailBlankId = e.target.id;
+
+    const store = rdf.graph();
+    const updater = new rdf.UpdateManager(store);
+
+    var del;
+    var ins;
+
+    del = rdf.st(
+      rdf.sym(oldEmailBlankId),
+      VCARD("value"),
+      rdf.sym("mailto:" + oldEmail),
+      rdf.sym(this.state.webId).doc()
+    );
+    ins = rdf.st(
+      rdf.sym(oldEmailBlankId),
+      VCARD("value"),
+      rdf.sym("mailto:" + this.state.newEmail),
+      rdf.sym(this.state.webId).doc()
+    );
+
+    var updatePromise = new Promise((resolve, reject) => {
+      updater.update(del, ins, (uri, ok, message) => {
+        if (ok) {
+          resolve()
+        } else reject(message);
+      });
+    });
+    updatePromise.then(() => {
+      let newEmail = [
+        "mailto:" + this.state.newEmail,
+        oldEmailBlankId
+      ];
+      this.setState({ editEmail: false, currentValue: newEmail });
+    })
+  }
+
+  getNewEmail(e) {
+    this.setState({ newEmail: e.target.value });
+  }
+
+  toggleEditEmail() {
+    this.setState({ editEmail: !this.state.editEmail });
+  }
+
   componentDidMount() {
     this.fetchUser();
   }
@@ -268,6 +318,19 @@ class Profile extends React.Component {
       />
     );
 
+    let emailSlotsMarkup = this.state.emails.map((email, index) => {
+      return (
+        <EmailSlot
+          key={index}
+          email={email}
+          editMode={this.state.editEmail}
+          onChange={this.getNewEmail.bind(this)}
+          onClick={this.toggleEditEmail.bind(this)}
+          onBlur={this.applyEmailChanges.bind(this)}
+        />
+      );
+    });
+
     return (
       <Container>
         {this.props.webId ? (
@@ -282,6 +345,7 @@ class Profile extends React.Component {
               <Col>
                 {nameSlotMarkup}
                 {bioSlotMarkup}
+                {emailSlotsMarkup}
               </Col>
             </Row>
             <Row>
