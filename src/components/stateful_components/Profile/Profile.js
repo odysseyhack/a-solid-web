@@ -3,9 +3,9 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
-import ProfilePicture from "./functional_components/ProfilePicture";
-import NameSlot from "./functional_components/NameSlot";
-import BioSlot from "./functional_components/BioSlot";
+import ProfilePicture from "../../functional_components/ProfilePicture/ProfilePicture";
+import NameSlot from "../../functional_components/NameSlot/NameSlot";
+import BioSlot from "../../functional_components/BioSlot/BioSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
