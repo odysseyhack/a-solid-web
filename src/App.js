@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Profile from "./components/Profile";
+import Profile from "./components/stateful_components/Profile";
 import Navigation from "./components/functional_components/Navigation";
 import auth from "solid-auth-client";
 
@@ -8,7 +8,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webId: undefined,
+      webId: undefined
     };
   }
 
@@ -18,10 +18,10 @@ class App extends React.Component {
         console.log("You are not logged in");
       } else {
         console.log("You are logged in... Fetching your data now");
-        console.log(session)
+        console.log(session);
         this.setState({
           webId: session.webId
-        })
+        });
       }
     });
   }
@@ -45,7 +45,7 @@ class App extends React.Component {
     });
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchUser();
   }
 
