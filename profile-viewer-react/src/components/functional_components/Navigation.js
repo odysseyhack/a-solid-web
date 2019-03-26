@@ -89,12 +89,13 @@ class Navigation extends React.Component {
 
     return (
       <div style={{ padding: "2%" }}>
-        <Navbar bg="dark" variant="dark" fixed="top">
+        <Navbar bg="light" variant="light" fixed="top">
           <Navbar.Brand>
             <img src="favicon.ico" width="30" height="30" alt="Solid logo" />
+            <span style={{marginLeft: "5%"}}>Solid Web</span>
           </Navbar.Brand>
           <Nav className="mr-auto">
-            <NavLink to="/">Profile</NavLink>
+            <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Profile</NavLink>
           </Nav>
           <Form inline>
             {this.props.webId ? (
