@@ -5,6 +5,7 @@ import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import ProfilePicture from "./functional_components/ProfilePicture";
 import NameSlot from "./functional_components/NameSlot";
+import BioSlot from "./functional_components/BioSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -22,8 +23,10 @@ class Profile extends React.Component {
       job: "",
       bio: "",
       telephones: [],
-      newNameValue: "",
-      editName: false
+      newName: "",
+      editName: false,
+      newBio: "",
+      editBio: false
     };
   }
 
@@ -48,7 +51,7 @@ class Profile extends React.Component {
 
         fetcher.load(webId).then(() => {
           const name = store.any(rdf.sym(webId), FOAF("name"));
-          const nameValue = name ? name.value : "";
+          const nameValue = name ? name.value : undefined;
 
           var emails = [];
           store
@@ -68,7 +71,7 @@ class Profile extends React.Component {
           const jobValue = job ? job.value : "";
 
           const bio = store.any(rdf.sym(webId), VCARD("note"));
-          const bioValue = bio ? bio.value : "";
+          const bioValue = bio ? bio.value : undefined;
 
           var telephones = [];
           store
@@ -92,13 +95,13 @@ class Profile extends React.Component {
             job: jobValue,
             bio: bioValue,
             telephones: telephones,
-            newNameValue: nameValue,
+            newName: nameValue,
             editMode: false
           });
         });
       }
     });
-  }
+  };
 
   setProfilePicture = e => {
     var filePath = e.target.files[0];
@@ -165,30 +168,72 @@ class Profile extends React.Component {
     ins = rdf.st(
       rdf.sym(this.state.webId),
       FOAF("name"),
-      rdf.lit(this.state.newNameValue),
+      rdf.lit(this.state.newName),
       rdf.sym(this.state.webId).doc()
     );
 
     var updatePromise = new Promise((resolve, reject) => {
       updater.update(del, ins, (uri, ok, message) => {
         if (ok) {
-          console.log("Changes have been applied!")
-          resolve()
+          console.log("Changes have been applied!");
+          resolve();
         } else reject(message);
       });
       this.setState({ editName: false });
-    })
+    });
     updatePromise.then(() => {
       this.fetchUser();
-    })
+    });
   }
 
-  getNewNameValue(e) {
-    this.setState({ newNameValue: e.target.value });
+  getNewName(e) {
+    this.setState({ newName: e.target.value });
   }
 
   toggleEditName() {
     this.setState({ editName: !this.state.editName });
+  }
+
+  applyBioChanges() {
+    const store = rdf.graph();
+    const updater = new rdf.UpdateManager(store);
+
+    var del;
+    var ins;
+
+    del = rdf.st(
+      rdf.sym(this.state.webId),
+      VCARD("note"),
+      rdf.lit(this.state.bio),
+      rdf.sym(this.state.webId).doc()
+    );
+    ins = rdf.st(
+      rdf.sym(this.state.webId),
+      VCARD("note"),
+      rdf.lit(this.state.newBio),
+      rdf.sym(this.state.webId).doc()
+    );
+
+    var updatePromise = new Promise((resolve, reject) => {
+      updater.update(del, ins, (uri, ok, message) => {
+        if (ok) {
+          console.log("Changes have been applied!");
+          resolve();
+        } else reject(message);
+      });
+      this.setState({ editBio: false });
+    });
+    updatePromise.then(() => {
+      this.fetchUser();
+    });
+  }
+
+  getNewBio(e) {
+    this.setState({ newBio: e.target.value });
+  }
+
+  toggleEditBio() {
+    this.setState({ editBio: !this.state.editBio });
   }
 
   componentDidMount() {
@@ -197,18 +242,44 @@ class Profile extends React.Component {
 
   render() {
     let nameSlotMarkup =
-      this.state.name !== "" ? (
+      this.state.name ? (
         <NameSlot
-          webId={this.state.webId}
           name={this.state.name}
           editMode={this.state.editName}
           onBlur={this.applyNameChanges.bind(this)}
-          onChange={this.getNewNameValue.bind(this)}
+          onChange={this.getNewName.bind(this)}
           onClick={this.toggleEditName.bind(this)}
         />
       ) : (
-        ""
+        <NameSlot
+          name="You did not enter your name yet..."
+          editMode={this.state.editName}
+          onBlur={this.applyNameChanges.bind(this)}
+          onChange={this.getNewName.bind(this)}
+          onClick={this.toggleEditName.bind(this)}
+        />
       );
+
+    let bioSlotMarkup =
+      this.state.bio ? (
+        <BioSlot
+          bio={this.state.bio}
+          editMode={this.state.editBio}
+          onBlur={this.applyBioChanges.bind(this)}
+          onChange={this.getNewBio.bind(this)}
+          onClick={this.toggleEditBio.bind(this)}
+        />
+      ) : (
+        <BioSlot
+          bio="You do not have a bio yet..."
+          editMode={this.state.editBio}
+          onBlur={this.applyBioChanges.bind(this)}
+          onChange={this.getNewBio.bind(this)}
+          onClick={this.toggleEditBio.bind(this)}
+        />
+      );
+    
+    console.log(bioSlotMarkup)
 
     return (
       <Container>
@@ -221,10 +292,15 @@ class Profile extends React.Component {
           </Col>
           <Col>
             {nameSlotMarkup}
+            {bioSlotMarkup}
           </Col>
         </Row>
         <Row>
-          {this.state.webId !== "" ? <Button onClick={this.logout.bind(this)}>Logout</Button> : ""}
+          {this.state.webId !== "" ? (
+            <Button onClick={this.logout.bind(this)}>Logout</Button>
+          ) : (
+            ""
+          )}
         </Row>
       </Container>
     );
