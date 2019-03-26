@@ -7,6 +7,7 @@ import ProfilePicture from "../../functional_components/ProfilePicture/ProfilePi
 import NameSlot from "../../functional_components/NameSlot/NameSlot";
 import BioSlot from "../../functional_components/BioSlot/BioSlot";
 import EmailSlot from "../../functional_components/EmailSlot";
+import TelephoneSlot from "../../functional_components/TelephoneSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -29,7 +30,9 @@ class Profile extends React.Component {
       newBio: "",
       editBio: false,
       newEmail: "",
-      editEmail: false
+      editEmail: false,
+      newTelephone: "",
+      editTelephone: false
     };
   }
 
@@ -256,17 +259,14 @@ class Profile extends React.Component {
     var updatePromise = new Promise((resolve, reject) => {
       updater.update(del, ins, (uri, ok, message) => {
         if (ok) {
-          resolve()
+          resolve();
         } else reject(message);
       });
     });
     updatePromise.then(() => {
-      let newEmail = [
-        "mailto:" + this.state.newEmail,
-        oldEmailBlankId
-      ];
-      this.setState({ editEmail: false, currentValue: newEmail });
-    })
+      this.setState({ editEmail: false });
+      this.fetchUser();
+    });
   }
 
   getNewEmail(e) {
@@ -275,6 +275,50 @@ class Profile extends React.Component {
 
   toggleEditEmail() {
     this.setState({ editEmail: !this.state.editEmail });
+  }
+
+  applyTelephoneChanges(e) {
+    const oldTelephone = e.target.placeholder;
+    const oldTelephoneBlankId = e.target.id;
+
+    const store = rdf.graph();
+    const updater = new rdf.UpdateManager(store);
+
+    var del;
+    var ins;
+
+    del = rdf.st(
+      rdf.sym(oldTelephoneBlankId),
+      VCARD("value"),
+      rdf.sym("tel:" + oldTelephone),
+      rdf.sym(this.state.webId).doc()
+    );
+    ins = rdf.st(
+      rdf.sym(oldTelephoneBlankId),
+      VCARD("value"),
+      rdf.sym("tel:" + this.state.newTelephone),
+      rdf.sym(this.state.webId).doc()
+    );
+
+    var updatePromise = new Promise((resolve, reject) => {
+      updater.update(del, ins, (uri, ok, message) => {
+        if (ok) {
+          resolve();
+        } else reject(message);
+      });
+    });
+    updatePromise.then(() => {
+      this.setState({ editTelephone: false });
+      this.fetchUser();
+    });
+  }
+
+  getNewTelephone(e) {
+    this.setState({ newTelephone: e.target.value });
+  }
+
+  toggleEditTelephone() {
+    this.setState({ editTelephone: !this.state.editTelephone });
   }
 
   componentDidMount() {
@@ -331,6 +375,19 @@ class Profile extends React.Component {
       );
     });
 
+    let telephoneSlotsMarkup = this.state.telephones.map((telephone, index) => {
+      return (
+        <TelephoneSlot
+          key={index}
+          telephone={telephone}
+          editMode={this.state.editTelephone}
+          onChange={this.getNewTelephone.bind(this)}
+          onClick={this.toggleEditTelephone.bind(this)}
+          onBlur={this.applyTelephoneChanges.bind(this)}
+        />
+      );
+    });
+
     return (
       <Container>
         {this.props.webId ? (
@@ -346,6 +403,7 @@ class Profile extends React.Component {
                 {nameSlotMarkup}
                 {bioSlotMarkup}
                 {emailSlotsMarkup}
+                {telephoneSlotsMarkup}
               </Col>
             </Row>
             <Row>
