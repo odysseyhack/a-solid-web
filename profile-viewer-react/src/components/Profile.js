@@ -4,8 +4,7 @@ import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import ProfilePicture from "./functional_components/ProfilePicture";
-import ProfileField from "./functional_components/ProfileField"; 
-import FormControl from "react-bootstrap/FormControl";
+import NameSlot from "./functional_components/NameSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -17,17 +16,16 @@ class Profile extends React.Component {
     super(props);
     this.state = {
       webId: "",
-			name: "",
-			picture: "",
+      name: "",
+      picture: "",
       emails: [],
       job: "",
       bio: "",
-      telephones: [], 
-      currentNameValue: "",
+      telephones: [],
       newNameValue: "",
-      editMode: false
+      editName: false
     };
-	}
+  }
 
   async login() {
     const session = await auth.currentSession();
@@ -41,9 +39,9 @@ class Profile extends React.Component {
         webId: ""
       });
     });
-	}
+  }
 
-	fetchUser() {
+  fetchUser = () => {
     auth.trackSession(session => {
       if (!session) {
         console.log("You are not logged in");
@@ -55,18 +53,22 @@ class Profile extends React.Component {
         const fetcher = new rdf.Fetcher(store);
 
         fetcher.load(webId).then(() => {
-					const name = store.any(rdf.sym(webId), FOAF("name"))
-					const nameValue = name ? name.value : "";
+          const name = store.any(rdf.sym(webId), FOAF("name"));
+          const nameValue = name ? name.value : "";
 
           var emails = [];
-          store.each(rdf.sym(webId), VCARD("hasEmail")).forEach(emailBlankId => {
-						store.each(rdf.sym(emailBlankId), VCARD("value")).forEach(emailAddress => {
-								emails.push([emailAddress.value, emailBlankId.value]);
-							});
-					});
+          store
+            .each(rdf.sym(webId), VCARD("hasEmail"))
+            .forEach(emailBlankId => {
+              store
+                .each(rdf.sym(emailBlankId), VCARD("value"))
+                .forEach(emailAddress => {
+                  emails.push([emailAddress.value, emailBlankId.value]);
+                });
+            });
 
-					const picture = store.any(rdf.sym(webId), VCARD("hasPhoto"));
-					const pictureValue = picture ? picture.value : "";
+          const picture = store.any(rdf.sym(webId), VCARD("hasPhoto"));
+          const pictureValue = picture ? picture.value : "";
 
           const job = store.any(rdf.sym(webId), VCARD("role"));
           const jobValue = job ? job.value : "";
@@ -90,22 +92,21 @@ class Profile extends React.Component {
 
           this.setState({
             webId: webId,
-						name: nameValue,
-						picture: pictureValue,
+            name: nameValue,
+            picture: pictureValue,
             emails: emails,
             job: jobValue,
             bio: bioValue,
-            telephones: telephones, 
-            currentNameValue: nameValue,
+            telephones: telephones,
             newNameValue: nameValue,
             editMode: false
           });
         });
       }
     });
-	}
-	
-	setProfilePicture = e => {
+  }
+
+  setProfilePicture = e => {
     var filePath = e.target.files[0];
     var store = rdf.graph();
     var fetcher = new rdf.Fetcher(store);
@@ -154,34 +155,46 @@ class Profile extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
-  applyNameChanges(){
+  applyNameChanges() {
     const store = rdf.graph();
     const updater = new rdf.UpdateManager(store);
 
     var del;
     var ins;
 
-    console.log(this.state.currentValue); 
+    del = rdf.st(
+      rdf.sym(this.state.webId),
+      FOAF("name"),
+      rdf.lit(this.state.name),
+      rdf.sym(this.state.webId).doc()
+    );
+    ins = rdf.st(
+      rdf.sym(this.state.webId),
+      FOAF("name"),
+      rdf.lit(this.state.newNameValue),
+      rdf.sym(this.state.webId).doc()
+    );
 
-    del = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.currentNameValue), rdf.sym(this.state.webId).doc());
-    ins = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.newNameValue), rdf.sym(this.state.webId).doc());
-
-    updater.update(del, ins, (uri, ok, message) => {
-        if(ok) {
-            let newValue = this.state.newNameValue;
-            this.setState({editMode: false, currentNameValue: newValue});
-        }
-        else alert(message);
-    });
-    this.setState({editMode: false});
+    var updatePromise = new Promise((resolve, reject) => {
+      updater.update(del, ins, (uri, ok, message) => {
+        if (ok) {
+          console.log("Changes have been applied!")
+          resolve()
+        } else reject(message);
+      });
+      this.setState({ editName: false });
+    })
+    updatePromise.then(() => {
+      this.fetchUser();
+    })
   }
 
-  getNewNameValue(e){
-      this.setState({newNameValue: e.target.value})
+  getNewNameValue(e) {
+    this.setState({ newNameValue: e.target.value });
   }
 
-  toggleEditMode(){
-      this.setState({editMode: !this.state.editMode});
+  toggleEditName() {
+    this.setState({ editName: !this.state.editName });
   }
 
   componentDidMount() {
@@ -189,29 +202,39 @@ class Profile extends React.Component {
   }
 
   render() {
-    let nameSlotMarkup = (this.state.editMode) ? <FormControl placeholder={this.state.currentNameValue} onChange={this.getNewNameValue.bind(this)} onBlur={this.applyNameChanges.bind(this)} defaultValue={this.state.currentNameValue}></FormControl> : <p onClick={this.toggleEditMode.bind(this)}>{this.state.currentNameValue}</p>
+    let nameSlotMarkup =
+      this.state.name !== "" ? (
+        <NameSlot
+          webId={this.state.webId}
+          name={this.state.name}
+          editMode={this.state.editName}
+          onBlur={this.applyNameChanges.bind(this)}
+          onChange={this.getNewNameValue.bind(this)}
+          onClick={this.toggleEditName.bind(this)}
+        />
+      ) : (
+        ""
+      );
 
     return (
       <Container>
-				<Row>
-					<Col>
-						<ProfilePicture picture={this.state.picture} onChange={this.setProfilePicture}/>
-					</Col>
-					<Col>
-						{this.state.name}
-					</Col>
-				</Row>
-        <Row>
-          {this.state.webId !== "" ? (
-							<Button onClick={this.logout.bind(this)}>Logout</Button>
-          ) : (
-								<Button onClick={this.login.bind(this)}>Login</Button>
-          )}
-        </Row>
         <Row>
           <Col>
-            <ProfileField webId={this.state.webId} name={this.state.name} nameSlotMarkup={nameSlotMarkup}/>
+            <ProfilePicture
+              picture={this.state.picture}
+              onChange={this.setProfilePicture}
+            />
           </Col>
+          <Col>
+            {nameSlotMarkup}
+          </Col>
+        </Row>
+        <Row>
+          {this.state.webId !== "" ? (
+            <Button onClick={this.logout.bind(this)}>Logout</Button>
+          ) : (
+            <Button onClick={this.login.bind(this)}>Login</Button>
+          )}
         </Row>
       </Container>
     );
