@@ -3,13 +3,14 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
-import ProfilePicture from "../../functional_components/ProfilePicture/ProfilePicture";
-import NameSlot from "../../functional_components/NameSlot/NameSlot";
-import BioSlot from "../../functional_components/BioSlot/BioSlot";
+import ProfilePicture from "../../functional_components/ProfilePicture";
+import NameSlot from "../../functional_components/NameSlot";
+import BioSlot from "../../functional_components/BioSlot";
 import EmailSlot from "../../functional_components/EmailSlot";
 import TelephoneSlot from "../../functional_components/TelephoneSlot";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import JobSlot from "../../functional_components/JobSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -32,7 +33,9 @@ class Profile extends React.Component {
       newEmail: "",
       editEmail: false,
       newTelephone: "",
-      editTelephone: false
+      editTelephone: false,
+      newJob: "",
+      editJob: false
     };
   }
 
@@ -277,6 +280,47 @@ class Profile extends React.Component {
     this.setState({ editEmail: !this.state.editEmail });
   }
 
+  applyJobChanges() {
+    const store = rdf.graph();
+    const updater = new rdf.UpdateManager(store);
+
+    var del;
+    var ins;
+
+    del = rdf.st(
+      rdf.sym(this.props.webId),
+      VCARD("role"),
+      rdf.lit(this.state.job),
+      rdf.sym(this.props.webId).doc()
+    );
+    ins = rdf.st(
+      rdf.sym(this.props.webId),
+      VCARD("role"),
+      rdf.lit(this.state.newJob),
+      rdf.sym(this.props.webId).doc()
+    );
+
+    var updatePromise = new Promise((resolve, reject) => {
+      updater.update(del, ins, (uri, ok, message) => {
+        if (ok) {
+          resolve();
+        } else reject(message);
+      });
+    });
+    updatePromise.then(() => {
+      this.setState({ editJob: false });
+      this.fetchUser();
+    });
+  }
+
+  getNewJob(e) {
+    this.setState({ newJob: e.target.value });
+  }
+
+  toggleEditJob() {
+    this.setState({ editJob: !this.state.editJob });
+  }
+
   applyTelephoneChanges(e) {
     const oldTelephone = e.target.placeholder;
     const oldTelephoneBlankId = e.target.id;
@@ -344,6 +388,24 @@ class Profile extends React.Component {
       />
     );
 
+    let jobSlotMarkup = this.state.job ? (
+      <JobSlot
+        job={this.state.job}
+        editMode={this.state.editJob}
+        onBlur={this.applyJobChanges.bind(this)}
+        onChange={this.getNewJob.bind(this)}
+        onClick={this.toggleEditJob.bind(this)}
+      />
+    ) : (
+      <JobSlot
+        job="You did not enter your job yet..."
+        editMode={this.state.editJob}
+        onBlur={this.applyJobChanges.bind(this)}
+        onChange={this.getNewJob.bind(this)}
+        onClick={this.toggleEditJob.bind(this)}
+      />
+    );
+
     let bioSlotMarkup = this.state.bio ? (
       <BioSlot
         bio={this.state.bio}
@@ -401,6 +463,7 @@ class Profile extends React.Component {
               </Col>
               <Col>
                 {nameSlotMarkup}
+                {jobSlotMarkup}
                 {bioSlotMarkup}
                 {emailSlotsMarkup}
                 {telephoneSlotsMarkup}
