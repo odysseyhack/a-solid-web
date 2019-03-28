@@ -89,7 +89,7 @@ class Navigation extends React.Component {
 
     return (
       <div style={{ padding: "2%" }}>
-        <Navbar bg="light" variant="light" fixed="top">
+        <Navbar bg="white" variant="light" fixed="top">
           <Navbar.Brand>
             <img src="favicon.ico" width="30" height="30" alt="Solid logo" />
             <span style={{ marginLeft: "5%" }}>Solid Web</span>
