@@ -1,4 +1,5 @@
 .grid-container {
+  background-color: #f9fafb;
   display: grid;
   grid-gap: 0px 25px;
   grid-template-columns: 1fr 2fr 1fr;
@@ -14,9 +15,23 @@
 
   display: flex;
   justify-content: space-around;
-  padding: 10px;
-  border: black solid 1px;
-  background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+  background-color: #ffff;
+}
+
+#toggle > div:first-of-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #3256d7;
+  width: 100%;
+}
+
+#toggle > div:last-of-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #d6d6d6;
+  width: 100%;
 }
 
 .requestcards {
@@ -33,7 +48,11 @@
 }
 
 .requestcards-card-request {
-  border: black solid 1px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  background-color: #ffff;
   padding: 20px;
   margin-top: 14px;
 }

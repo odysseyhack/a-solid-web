@@ -41,7 +41,8 @@ class OverviewPage extends React.Component {
     return (
       <div className="grid-container">
         <div id="toggle">
-          <div>Requests</div> <div>Activity</div>
+          <div>Requests</div>
+          <div>Activity</div>
         </div>
         <div className="requestcards">{requests}</div>
       </div>
