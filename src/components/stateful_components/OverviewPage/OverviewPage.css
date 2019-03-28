@@ -1,0 +1,39 @@
+.grid-container {
+  display: grid;
+  grid-gap: 0px 25px;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 3em 3em 1fr;
+
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+#toggle {
+  grid-column: 2/3;
+  grid-row: 2/3;
+
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  border: black solid 1px;
+  background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+}
+
+.requestcards {
+  grid-column: 2/3;
+  grid-row: 3;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-content: space-around;
+}
+
+.requestcards-card {
+  margin-top: 40px;
+}
+
+.requestcards-card-request {
+  border: black solid 1px;
+  padding: 20px;
+  margin-top: 14px;
+}

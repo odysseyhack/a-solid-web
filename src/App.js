@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import auth from "solid-auth-client";
 import Profile from "./components/stateful_components/Profile";
 import Navigation from "./components/stateful_components/Navigation";
-import auth from "solid-auth-client";
+import OverviewPage from "./components/stateful_components/OverviewPage/OverviewPage";
 
 class App extends React.Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class App extends React.Component {
               )}
               exact
             />
+            <Route path="/overview" render={() => <OverviewPage />} />
           </Switch>
         </div>
       </BrowserRouter>
