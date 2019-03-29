@@ -8,21 +8,18 @@ class OverviewPage extends React.Component {
   }
 
   getRequests() {
-    const requests = Array(12).fill({
-      name: "Malte Sielski",
-      requests: ["View your phone number", "Edit your Birthdate"]
-    });
-    return requests.map(item => {
+    const requests = this.props.requests ? this.props.requests : [];
+    return requests.map((item, i) => {
       return (
-        <div className="requestcards-card">
+        <div className="requestcards-card" key={i}>
           <img
             src="https://via.placeholder.com/40?text=profile+picture"
-            alt="profile picture"
+            alt="avatar"
           />
           <strong>{item.name}</strong> wants to
-          {item.requests.map(request => {
+          {item.requests.map((request, j) => {
             return (
-              <div className="requestcards-card-request">
+              <div className="requestcards-card-request" key={j}>
                 {request}
                 <div>
                   <Button variant="outlined">Accept</Button>
