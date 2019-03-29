@@ -32,6 +32,7 @@
   ],
   "homepage": "http://a-solid-web.github.io/profile-viewer-react",
   "devDependencies": {
-    "gh-pages": "^2.0.1"
+    "gh-pages": "^2.0.1",
+    "react-test-renderer": "^16.8.6"
   }
 }
