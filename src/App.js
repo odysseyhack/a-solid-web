@@ -72,7 +72,10 @@ class App extends React.Component {
                 <OverviewPage
                   requests={Array(5).fill({
                     name: "Malte Sielski",
-                    requests: ["View your phone number", "Edit your Birthdate"]
+                    permissions: [
+                      "View your phone number",
+                      "Edit your Birthdate"
+                    ]
                   })}
                 />
               )}

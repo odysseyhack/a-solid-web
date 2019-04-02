@@ -7,7 +7,7 @@ test("Request cards are displayed properly", () => {
     <OverviewPage
       requests={Array(12).fill({
         name: "Malte Sielski",
-        requests: ["View your phone number", "Edit your Birthdate"]
+        permissions: ["View your phone number", "Edit your Birthdate"]
       })}
     />
   );
@@ -24,7 +24,7 @@ test("Add a request to the overview page", () => {
 
   page.props.addRequest({
     name: "Ludwig Schubert",
-    requests: ["View your comic collection", "Eat your food"]
+    permissions: ["View your comic collection", "Eat your food"]
   });
   page = component.toJSON();
   expect(page).toMatchSnapshot();
@@ -35,7 +35,7 @@ test("Remove a request from the overview page", () => {
     <OverviewPage
       requests={Array(12).fill({
         name: "Malte Sielski",
-        requests: ["View your phone number", "Edit your Birthdate"]
+        permissions: ["View your phone number", "Edit your Birthdate"]
       })}
     />
   );
