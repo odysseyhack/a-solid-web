@@ -66,7 +66,17 @@ class App extends React.Component {
               )}
               exact
             />
-            <Route path="/overview" render={() => <OverviewPage />} />
+            <Route
+              path="/overview"
+              render={() => (
+                <OverviewPage
+                  requests={Array(5).fill({
+                    name: "Malte Sielski",
+                    requests: ["View your phone number", "Edit your Birthdate"]
+                  })}
+                />
+              )}
+            />
           </Switch>
         </div>
       </BrowserRouter>
