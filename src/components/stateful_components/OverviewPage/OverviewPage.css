@@ -23,18 +23,20 @@
 }
 
 #toggle > div:first-of-type {
+  color: #3256d7;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 2px solid #3256d7;
+  border-bottom: 3px solid #3256d7;
   width: 100%;
 }
 
 #toggle > div:last-of-type {
+  color: #c2c2c2;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 2px solid #d6d6d6;
+  border-bottom: 3px solid #f6f6f6;
   width: 100%;
 }
 
@@ -51,6 +53,10 @@
   margin-top: 40px;
 }
 
+.requestcards-avatar {
+  margin-right: 11px;
+}
+
 .requestcards-card-request {
   display: flex;
   flex-wrap: wrap;
@@ -59,4 +65,8 @@
   background-color: #ffff;
   padding: 20px;
   margin-top: 14px;
+}
+
+.requestcards-card-button {
+  margin: 2px;
 }

@@ -16,17 +16,28 @@ class OverviewPage extends React.Component {
         return (
           <div className="requestcards-card" key={i}>
             <img
+              className="requestcards-avatar"
               src="https://via.placeholder.com/40?text=profile+picture"
               alt="avatar"
             />
-            <strong>{item.name}</strong> wants to
+            <strong>{item.name}</strong> wants to:
             {item.requests.map((request, j) => {
               return (
                 <div className="requestcards-card-request" key={j}>
                   {request}
                   <div>
-                    <Button variant="outlined">Accept</Button>
-                    <Button variant="outlined">Deny</Button>
+                    <Button
+                      className="requestcards-card-button"
+                      variant="outlined"
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      className="requestcards-card-button"
+                      variant="outlined"
+                    >
+                      Deny
+                    </Button>
                   </div>
                 </div>
               );
