@@ -48,26 +48,3 @@
   flex-flow: column nowrap;
   align-content: space-around;
 }
-
-.requestcards-card {
-  margin-top: 40px;
-}
-
-.requestcards-avatar {
-  margin-right: 11px;
-}
-
-.requestcards-card-request {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  background-color: #ffff;
-  padding: 20px;
-  margin-top: 14px;
-  box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.02);
-}
-
-.requestcards-card-button {
-  margin: 2px;
-}
