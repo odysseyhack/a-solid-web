@@ -13,7 +13,7 @@ class RequestCard extends React.Component {
             src={this.props.avatar}
             alt="avatar"
           />
-          <strong>{request.name}</strong> wants to:
+          <strong>{request.author}</strong> wants to:
         </div>
         {request.permissions.map((permission, j) => {
           return (

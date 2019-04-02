@@ -71,7 +71,7 @@ class App extends React.Component {
               render={() => (
                 <OverviewPage
                   requests={Array(5).fill({
-                    name: "Malte Sielski",
+                    author: "Malte Sielski",
                     permissions: [
                       "View your phone number",
                       "Edit your Birthdate"
