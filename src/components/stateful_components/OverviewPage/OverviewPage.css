@@ -65,6 +65,7 @@
   background-color: #ffff;
   padding: 20px;
   margin-top: 14px;
+  box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.02);
 }
 
 .requestcards-card-button {
