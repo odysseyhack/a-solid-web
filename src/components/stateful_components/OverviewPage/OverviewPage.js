@@ -11,7 +11,7 @@ class OverviewPage extends React.Component {
     this.removeRequest = this.removeRequest.bind(this);
 
     this.state = {
-      requests: this.props.requests ? this.props.requests : []
+      requests: []
     };
   }
 
