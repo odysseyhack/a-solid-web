@@ -10,7 +10,7 @@ class RequestCard extends React.Component {
         <div className="requestcard-header">
           <img
             className="requestcard-header-avatar"
-            src={this.props.avatar}
+            src={request.avatar}
             alt="avatar"
           />
           <strong>{request.author}</strong> wants to:

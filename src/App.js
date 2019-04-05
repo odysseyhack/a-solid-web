@@ -19,7 +19,6 @@ class App extends React.Component {
         console.log("You are not logged in");
       } else {
         console.log("You are logged in... Fetching your data now");
-        console.log(session);
         this.setState({
           webId: session.webId
         });
@@ -70,13 +69,7 @@ class App extends React.Component {
               path="/overview"
               render={() => (
                 <OverviewPage
-                  requests={Array(5).fill({
-                    author: "Malte Sielski",
-                    permissions: [
-                      "View your phone number",
-                      "Edit your Birthdate"
-                    ]
-                  })}
+                  webId={this.state.webId}
                 />
               )}
             />

@@ -1,6 +1,5 @@
 import React from "react";
 import "./OverviewPage.css";
-import { Button } from "yoda-design-system";
 import RequestCard from "../../functional_components/RequestCard";
 
 class OverviewPage extends React.Component {
@@ -11,6 +10,7 @@ class OverviewPage extends React.Component {
     this.removeRequest = this.removeRequest.bind(this);
 
     this.state = {
+      webId: this.props.webId,
       requests: []
     };
   }
@@ -61,8 +61,8 @@ class OverviewPage extends React.Component {
     return (
       <div
         className="grid-container"
-        addRequest={this.addRequest}
-        removeRequest={this.removeRequest}
+        addrequest={this.addRequest}
+        removerequest={this.removeRequest}
       >
         <div id="toggle">
           <div>Requests</div>

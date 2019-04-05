@@ -64,7 +64,6 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.webId);
     let addFriendMarkup = this.state.canAddFriend ? (
       <div>
         <FormControl
