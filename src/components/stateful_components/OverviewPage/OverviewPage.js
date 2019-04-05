@@ -3,8 +3,11 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import "./OverviewPage.css";
 import RequestCard from "../../functional_components/RequestCard";
+import { DH_NOT_SUITABLE_GENERATOR } from "constants";
+import { throws } from "assert";
 
 const LDP = rdf.Namespace("http://www.w3.org/ns/ldp#");
+const ACT = rdf.Namespace("https://www.w3.org/ns/activitystreams#");
 
 class OverviewPage extends React.Component {
   constructor(props) {
@@ -12,6 +15,8 @@ class OverviewPage extends React.Component {
 
     this.addRequest = this.addRequest.bind(this);
     this.removeRequest = this.removeRequest.bind(this);
+    this.fetchNotificationAddresses = this.fetchNotificationAddresses.bind(this);
+    this.fetchNotification = this.fetchNotification.bind(this);
 
     this.state = {
       webId: this.props.webId,
@@ -19,15 +24,28 @@ class OverviewPage extends React.Component {
     };
   }
 
-  fetchNotifications(webId){
-    let store = rdf.graph();
-    let fetcher = new rdf.Fetcher(store);
+  fetchNotificationAddresses(webId){
+    let inboxStore = rdf.graph();
+    let inboxFetcher = new rdf.Fetcher(inboxStore);
 
     let inboxAddress = webId.replace("profile/card#me", "inbox");
 
-    fetcher.load(inboxAddress).then((response) => {
-      const notificationAddresses = store.each(rdf.sym(inboxAddress), LDP("contains"));
-      console.log(notificationAddresses);
+    inboxFetcher.load(inboxAddress).then((response) => {
+      const notificationAddresses = inboxStore.each(rdf.sym(inboxAddress), LDP("contains"));
+      notificationAddresses.forEach((notificationAddress) => {
+        const notificationName = notificationAddress.value.split("/")[3]
+        this.fetchNotification(inboxAddress + "/" + notificationName)
+      })
+    })
+  }
+
+  fetchNotification(notificationAddress){
+    let notificationStore = rdf.graph();
+    let notificationFetcher = new rdf.Fetcher(notificationStore);
+
+    notificationFetcher.load(notificationAddress).then((response) => {
+      const sender = notificationStore.any(rdf.sym(notificationAddress), ACT("actor"));
+      console.log(sender.value)
     })
   }
 
@@ -82,7 +100,7 @@ class OverviewPage extends React.Component {
         })
       }
 
-      this.fetchNotifications(this.state.webId);
+      this.fetchNotificationAddresses(this.state.webId);
     })
   }
 
