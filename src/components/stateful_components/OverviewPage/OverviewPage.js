@@ -1,6 +1,10 @@
 import React from "react";
+import rdf from "rdflib";
+import auth from "solid-auth-client";
 import "./OverviewPage.css";
 import RequestCard from "../../functional_components/RequestCard";
+
+const LDP = rdf.Namespace("http://www.w3.org/ns/ldp#");
 
 class OverviewPage extends React.Component {
   constructor(props) {
@@ -13,6 +17,18 @@ class OverviewPage extends React.Component {
       webId: this.props.webId,
       requests: []
     };
+  }
+
+  fetchNotifications(webId){
+    let store = rdf.graph();
+    let fetcher = new rdf.Fetcher(store);
+
+    let inboxAddress = webId.replace("profile/card#me", "inbox");
+
+    fetcher.load(inboxAddress).then((response) => {
+      const notificationAddresses = store.each(rdf.sym(inboxAddress), LDP("contains"));
+      console.log(notificationAddresses);
+    })
   }
 
   addRequest(newRequest) {
@@ -54,6 +70,20 @@ class OverviewPage extends React.Component {
         );
       });
     }
+  }
+
+  componentDidMount(){
+    auth.trackSession((session) => {
+      if (!session){
+        console.log("You are not logged in...")
+      } else {
+        this.setState({
+          webId: session.webId
+        })
+      }
+
+      this.fetchNotifications(this.state.webId);
+    })
   }
 
   render() {

@@ -59,7 +59,6 @@ class App extends React.Component {
               path="/"
               render={() => (
                 <Profile
-                  webId={this.state.webId}
                   logout={this.logout.bind(this)}
                 />
               )}
@@ -69,7 +68,6 @@ class App extends React.Component {
               path="/overview"
               render={() => (
                 <OverviewPage
-                  webId={this.state.webId}
                 />
               )}
             />
