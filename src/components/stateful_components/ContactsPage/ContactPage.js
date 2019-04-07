@@ -17,7 +17,7 @@ class ContactsPage extends React.Component {
       webId: undefined,
       friendToAdd: "",
       canAddFriend: false,
-      friends: undefined
+      friends: []
     };
   }
 
@@ -33,44 +33,40 @@ class ContactsPage extends React.Component {
     let viewerNode = webId.replace("card#me", "card.acl#viewer");
     permissionFetcher.load(viewerNode);
 
-    fetcher.load(this.state.webId).then(response => {
-      const friendsWebId = store.each(rdf.sym(this.state.webId), FOAF("knows"));
+    fetcher.load(webId).then(response => {
+      const friendsWebId = store.each(rdf.sym(webId), FOAF("knows"));
+    
+      const friends = friendsWebId.map(friend => {
+        return fetcher.load(friend.value).then(() => {
+        console.log("Fetched " + friend.value + "'s Profile");
+        const friendName = store.any(rdf.sym(friend.value), FOAF("name"));
 
-      var friends = [];
-      friendsWebId.forEach(friend => {
-        var friendsPromise = new Promise(function(resolve, reject) {
-          fetcher.load(friend.value).then(() => {
-            console.log("Fetched " + friend.value + "'s Profile");
-            resolve(friend);
-          });
-        });
-        friendsPromise.then(function(friend) {
-          const friendName = store.any(rdf.sym(friend.value), FOAF("name"));
-
-          var friendPicture = store.any(
+        var friendPicture = store.any(
             rdf.sym(friend.value),
             VCARD("hasPhoto")
-          );
-          friendPicture = friendPicture ? friendPicture.value : "";
+        );
+        friendPicture = friendPicture ? friendPicture.value : "";
 
-          const friendAccess =
+        const friendAccess =
             permissionStore.statementsMatching(
-              viewerNode,
-              ACL("agent"),
-              rdf.sym(friend.value)
+            viewerNode,
+            ACL("agent"),
+            rdf.sym(friend.value)
             ).length > 0
-              ? true
-              : false;
-          //console.log(friend.value, friendAccess)
-          friends.push({
+            ? true
+            : false;
+        //console.log(friend.value, friendAccess)
+        return {
             name: friendName.value,
             webId: friend.value,
             access: friendAccess,
             picture: friendPicture
-          });
+        };
         });
       });
-      this.setState({ friends: friends });
+      Promise.all(friends).then((results) => {
+          this.setState({ friends: results });
+      })
     });
   }
 
@@ -151,9 +147,10 @@ class ContactsPage extends React.Component {
         <Button disabled>Add Friend</Button>
       </Form>
     );
-
-    const friendsMarkup = this.state.friends ? "These are my friends" : "I have no friends."
-
+    const friends = this.state.friends;
+    const friendsMarkup = friends.map((friend, index) => {
+        return <p key={index}>{friend.name}</p>
+    });
     return (
       <Container>
         {friendsMarkup}
