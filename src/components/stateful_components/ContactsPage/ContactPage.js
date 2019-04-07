@@ -3,7 +3,6 @@ import Container from "react-bootstrap/Container";
 import { Button, List, TextField } from "yoda-design-system";
 import auth from "solid-auth-client";
 import rdf from "rdflib";
-import Form from "react-bootstrap/Form";
 import ContactSlot from "../../functional_components/ContactSlot/ContactSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
@@ -127,22 +126,22 @@ class ContactsPage extends React.Component {
 
   render() {
     let addFriendMarkup = this.state.canAddFriend ? (
-      <Form inline>
+      <div>
         <TextField
           description="Enter a friends webId"
           onInput={this.changeFriendToAdd.bind(this)}
         />
         <Button onClick={this.addFriend.bind(this)}>Add Friend</Button>
-      </Form>
+      </div>
     ) : (
-      <Form inline>
+      <div>
         <TextField
           type="text"
           description="Enter a friends webId"
           onInput={this.changeFriendToAdd.bind(this)}
         />
         <Button disabled>Add Friend</Button>
-      </Form>
+      </div>
     );
     const friends = this.state.friends;
     const friendsMarkup = friends.map((friend, index) => {
