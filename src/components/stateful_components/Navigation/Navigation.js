@@ -94,14 +94,14 @@ class Navigation extends React.Component {
             <span style={{ marginLeft: "5%" }}>Solid Web</span>
           </Navbar.Brand>
           <Nav className="mr-auto">
-            <NavLink to="/" style={{ color: "#000", marginLeft: "10%" }}>
-              Profile
-            </NavLink>
             <NavLink
               to="/overview"
               style={{ color: "#000", marginLeft: "10%" }}
             >
               Overview
+            </NavLink>
+            <NavLink to="/" style={{ color: "#000", marginLeft: "10%" }}>
+              Profile
             </NavLink>
           </Nav>
           <Form inline>

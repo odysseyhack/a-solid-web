@@ -55,21 +55,11 @@ class App extends React.Component {
         <div>
           <Navigation login={this.login.bind(this)} webId={this.state.webId} />
           <Switch>
+            <Route path="/overview" render={() => <OverviewPage />} />
             <Route
               path="/"
-              render={() => (
-                <Profile
-                  logout={this.logout.bind(this)}
-                />
-              )}
+              render={() => <Profile logout={this.logout.bind(this)} />}
               exact
-            />
-            <Route
-              path="/overview"
-              render={() => (
-                <OverviewPage
-                />
-              )}
             />
           </Switch>
         </div>
