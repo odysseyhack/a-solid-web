@@ -64,7 +64,7 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.webId)
+    console.log(this.props.webId);
     let addFriendMarkup = this.state.canAddFriend ? (
       <div>
         <FormControl
@@ -88,23 +88,28 @@ class Navigation extends React.Component {
     );
 
     return (
-      <div style={{ padding: "2%" }}>
+      <div style={{ padding: "3%" }}>
         <Navbar bg="light" variant="light" fixed="top">
           <Navbar.Brand>
             <img src="favicon.ico" width="30" height="30" alt="Solid logo" />
-            <span style={{marginLeft: "5%"}}>Solid Web</span>
+            <span style={{ marginLeft: "5%" }}>Solid Web</span>
           </Navbar.Brand>
           <Nav className="mr-auto">
-            <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Profile</NavLink>
-            <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Contacts</NavLink>
+            <NavLink to="/" style={{ color: "#000", marginLeft: "10%" }}>
+              Profile
+            </NavLink>
+            <NavLink
+              to="/contacts"
+              style={{ color: "#000", marginLeft: "10%" }}
+            >
+              Contacts
+            </NavLink>
           </Nav>
-          <Form inline>
-            {this.props.webId ? (
-              addFriendMarkup
-            ) : (
-              <Button onClick={this.props.login}>Login</Button>
-            )}
-          </Form>
+          {this.props.webId ? (
+            ""
+          ) : (
+            <Button onClick={this.props.login}>Login</Button>
+          )}
         </Navbar>
       </div>
     );
