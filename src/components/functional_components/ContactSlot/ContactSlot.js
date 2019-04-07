@@ -1,6 +1,10 @@
-export default ContactSlot = (props) => {
-    const friend = this.props.friend
+import React from "react";
+import { Typography } from "yoda-design-system"
+const ContactSlot = (props) => {
+    const friend = props.friend
     return(
-        <p key={props.index}>friend.name</p>
+        <Typography variant="paragraph">{friend.name}</Typography>
     )
 }
+
+export default ContactSlot;

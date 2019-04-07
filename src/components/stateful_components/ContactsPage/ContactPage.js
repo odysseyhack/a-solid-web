@@ -1,10 +1,10 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import FormControl from "react-bootstrap/FormControl";
-import { Button } from "yoda-design-system";
+import { Button, List, TextField } from "yoda-design-system";
 import auth from "solid-auth-client";
 import rdf from "rdflib";
 import Form from "react-bootstrap/Form";
+import ContactSlot from "../../functional_components/ContactSlot/ContactSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -128,20 +128,17 @@ class ContactsPage extends React.Component {
   render() {
     let addFriendMarkup = this.state.canAddFriend ? (
       <Form inline>
-        <FormControl
-          type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
+        <TextField
+          description="Enter a friends webId"
           onInput={this.changeFriendToAdd.bind(this)}
         />
         <Button onClick={this.addFriend.bind(this)}>Add Friend</Button>
       </Form>
     ) : (
       <Form inline>
-        <FormControl
+        <TextField
           type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
+          description="Enter a friends webId"
           onInput={this.changeFriendToAdd.bind(this)}
         />
         <Button disabled>Add Friend</Button>
@@ -149,11 +146,11 @@ class ContactsPage extends React.Component {
     );
     const friends = this.state.friends;
     const friendsMarkup = friends.map((friend, index) => {
-        return <p key={index}>{friend.name}</p>
+        return <ContactSlot friend={friend} key={index}></ContactSlot>
     });
     return (
       <Container>
-        {friendsMarkup}
+        <List>{friendsMarkup}</List>
         {this.state.webId ? addFriendMarkup : <p>You are not logged in...</p>}
       </Container>
     );
