@@ -96,6 +96,7 @@ class Navigation extends React.Component {
           </Navbar.Brand>
           <Nav className="mr-auto">
             <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Profile</NavLink>
+            <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Contacts</NavLink>
           </Nav>
           <Form inline>
             {this.props.webId ? (
