@@ -2,8 +2,6 @@ import React from "react";
 import rdf from "rdflib";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import { NavLink } from "react-router-dom";
 import { Button } from "yoda-design-system";
 
@@ -64,29 +62,6 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.webId);
-    let addFriendMarkup = this.state.canAddFriend ? (
-      <div>
-        <FormControl
-          type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
-          onInput={this.changeFriendToAdd.bind(this)}
-        />
-        <Button onClick={this.addFriend.bind(this)}>Add Friend</Button>
-      </div>
-    ) : (
-      <div>
-        <FormControl
-          type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
-          onInput={this.changeFriendToAdd.bind(this)}
-        />
-        <Button disabled>Add Friend</Button>
-      </div>
-    );
-
     return (
       <div style={{ padding: "3%" }}>
         <Navbar bg="light" variant="light" fixed="top">
