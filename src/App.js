@@ -52,7 +52,7 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div>
-          <Navigation login={this.login.bind(this)} webId={this.state.webId} />
+          <Navigation login={this.login.bind(this)} />
           <Switch>
             <Route
               path="/"
