@@ -14,79 +14,12 @@ class Navigation extends React.Component {
     super(props);
     this.state = {
       webId: props.webId,
-      friendToAdd: "",
-      canAddFriend: false
+      picture: "",
+      name: "",
     };
-  }
-
-  changeFriendToAdd(e) {
-    var xhr = new XMLHttpRequest();
-    const url = e.target.value;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          this.setState({
-            friendToAdd: url,
-            canAddFriend: true
-          });
-        } else {
-          this.setState({
-            canAddFriend: false
-          });
-        }
-      }
-    };
-    const urlRegExp = new RegExp(/(\w+(:\/\/){1})(\w+\.)(\w+\.)(\w+\/)+/g);
-    if (urlRegExp.test(e.target.value)) {
-      xhr.open("GET", url);
-      xhr.send();
-    }
-  }
-
-  addFriend() {
-    let webId = this.props.webId;
-    let friendToAdd = this.state.friendToAdd;
-    console.log(friendToAdd);
-    const store = rdf.graph();
-    const updater = new rdf.UpdateManager(store);
-
-    let del = [];
-    let ins = rdf.st(
-      rdf.sym(webId),
-      FOAF("knows"),
-      rdf.sym(friendToAdd),
-      rdf.sym(webId).doc()
-    );
-    updater.update(del, ins, (ok, uri, message) => {
-      if (ok) console.log("Changes have been applied, reload page to see them");
-      else alert(message);
-    });
   }
 
   render() {
-    console.log(this.props.webId)
-    let addFriendMarkup = this.state.canAddFriend ? (
-      <div>
-        <FormControl
-          type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
-          onInput={this.changeFriendToAdd.bind(this)}
-        />
-        <Button onClick={this.addFriend.bind(this)}>Add Friend</Button>
-      </div>
-    ) : (
-      <div>
-        <FormControl
-          type="text"
-          placeholder="Enter a friends webId"
-          className="mr-sm-2"
-          onInput={this.changeFriendToAdd.bind(this)}
-        />
-        <Button disabled>Add Friend</Button>
-      </div>
-    );
-
     return (
       <div style={{ padding: "2%" }}>
         <Navbar bg="light" variant="light" fixed="top">
@@ -97,13 +30,6 @@ class Navigation extends React.Component {
           <Nav className="mr-auto">
             <NavLink to="/" style={{color: "#000", marginLeft: "10%"}}>Profile</NavLink>
           </Nav>
-          <Form inline>
-            {this.props.webId ? (
-              addFriendMarkup
-            ) : (
-              <Button onClick={this.props.login}>Login</Button>
-            )}
-          </Form>
         </Navbar>
       </div>
     );
