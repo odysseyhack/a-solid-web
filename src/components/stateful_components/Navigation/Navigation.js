@@ -36,7 +36,6 @@ class Navigation extends React.Component {
           name: nameValue,
           picture: pictureValue
         });
-        console.log(this.state)
       });
     }
   }

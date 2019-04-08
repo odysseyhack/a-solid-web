@@ -1,8 +1,12 @@
 import React from "react";
+import Image from "react-bootstrap/Image"
 
-const NavBarProfile = () => {
+const NavBarProfile = (props) => {
     return (
-        <p>I am a NavBar Profile!</p>
+        <span>
+            <Image width="6%" src={props.picture}/>
+            <p>{props.name}</p>
+        </span>
     )
 }
 
