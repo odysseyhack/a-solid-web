@@ -242,39 +242,43 @@ class Profile extends React.Component {
   }
 
   applyEmailChanges(e) {
-    const oldEmail = e.target.placeholder;
-    const oldEmailBlankId = e.target.id;
-
-    const store = rdf.graph();
-    const updater = new rdf.UpdateManager(store);
-
-    var del;
-    var ins;
-
-    del = rdf.st(
-      rdf.sym(oldEmailBlankId),
-      VCARD("value"),
-      rdf.sym("mailto:" + oldEmail),
-      rdf.sym(this.state.webId).doc()
-    );
-    ins = rdf.st(
-      rdf.sym(oldEmailBlankId),
-      VCARD("value"),
-      rdf.sym("mailto:" + this.state.newEmail),
-      rdf.sym(this.state.webId).doc()
-    );
-
-    var updatePromise = new Promise((resolve, reject) => {
-      updater.update(del, ins, (uri, ok, message) => {
-        if (ok) {
-          resolve();
-        } else reject(message);
+    if (this.state.newEmail !== "") {
+      const oldEmail = e.target.placeholder;
+      const oldEmailBlankId = e.target.id;
+  
+      const store = rdf.graph();
+      const updater = new rdf.UpdateManager(store);
+  
+      var del;
+      var ins;
+  
+      del = rdf.st(
+        rdf.sym(oldEmailBlankId),
+        VCARD("value"),
+        rdf.sym("mailto:" + oldEmail),
+        rdf.sym(this.state.webId).doc()
+      );
+      ins = rdf.st(
+        rdf.sym(oldEmailBlankId),
+        VCARD("value"),
+        rdf.sym("mailto:" + this.state.newEmail),
+        rdf.sym(this.state.webId).doc()
+      );
+  
+      var updatePromise = new Promise((resolve, reject) => {
+        updater.update(del, ins, (uri, ok, message) => {
+          if (ok) {
+            resolve();
+          } else reject(message);
+        });
       });
-    });
-    updatePromise.then(() => {
+      updatePromise.then(() => {
+        this.setState({ editEmail: false });
+        this.fetchUser();
+      });
+    } else {
       this.setState({ editEmail: false });
-      this.fetchUser();
-    });
+    }
   }
 
   getNewEmail(e) {

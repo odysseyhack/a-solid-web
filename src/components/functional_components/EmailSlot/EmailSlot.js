@@ -21,8 +21,7 @@ const EmailSlot = props => {
   );
 
   return (
-    <Row
-    >
+    <Row>
       <Col lg="3">
         <Typography variant="subtitle">{emailType}</Typography>
       </Col>
