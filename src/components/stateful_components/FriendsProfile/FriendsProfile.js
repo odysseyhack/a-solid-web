@@ -72,9 +72,9 @@ class FriendsProfile extends React.Component {
     }
 
     render(){
-        const emailSlotMarkup = this.state.emails.map((email) => {
+        const emailSlotMarkup = this.state.emails.map((email, index) => {
             return (
-                <FriendsEmailSlot email={email}></FriendsEmailSlot>
+                <FriendsEmailSlot email={email} key={index}></FriendsEmailSlot>
             )
         })
 
