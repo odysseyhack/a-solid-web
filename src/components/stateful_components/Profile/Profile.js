@@ -14,6 +14,7 @@ import JobSlot from "../../functional_components/JobSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
+const RDF = new rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 class Profile extends React.Component {
   constructor(props) {
@@ -53,25 +54,29 @@ class Profile extends React.Component {
           const name = store.any(rdf.sym(webId), FOAF("name"));
           const nameValue = name ? name.value : undefined;
 
-          var emails = [];
-          store
-            .each(rdf.sym(webId), VCARD("hasEmail"))
-            .forEach(emailBlankId => {
-              store
-                .each(rdf.sym(emailBlankId), VCARD("value"))
-                .forEach(emailAddress => {
-                  emails.push([emailAddress.value, emailBlankId.value]);
-                });
-            });
-
+          
           const picture = store.any(rdf.sym(webId), VCARD("hasPhoto"));
           const pictureValue = picture ? picture.value : "";
-
+          
           const job = store.any(rdf.sym(webId), VCARD("role"));
           const jobValue = job ? job.value : "";
-
+          
           const bio = store.any(rdf.sym(webId), VCARD("note"));
           const bioValue = bio ? bio.value : undefined;
+          
+          const emails = store
+            .each(rdf.sym(webId), VCARD("hasEmail"))
+            .map(emailBlankId => {
+              const email = store.any(rdf.sym(emailBlankId), VCARD("value"))
+              const emailValue = email.value
+              console.log(emailValue)
+
+              const emailType = store.any(rdf.sym(emailBlankId), RDF("type"))
+              const emailTypeValue = emailType ? emailType.value.split("#")[1] + "-Email" : "Email"
+              
+              return [emailValue, emailBlankId.value, emailTypeValue]
+            });
+          console.log(emails)
 
           var telephones = [];
           store
