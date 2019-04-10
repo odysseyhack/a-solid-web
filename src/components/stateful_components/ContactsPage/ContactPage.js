@@ -34,38 +34,38 @@ class ContactsPage extends React.Component {
 
     fetcher.load(webId).then(response => {
       const friendsWebId = store.each(rdf.sym(webId), FOAF("knows"));
-    
+
       const friends = friendsWebId.map(friend => {
         return fetcher.load(friend.value).then(() => {
-        console.log("Fetched " + friend.value + "'s Profile");
-        const friendName = store.any(rdf.sym(friend.value), FOAF("name"));
+          console.log("Fetched " + friend.value + "'s Profile");
+          const friendName = store.any(rdf.sym(friend.value), FOAF("name"));
 
-        var friendPicture = store.any(
+          var friendPicture = store.any(
             rdf.sym(friend.value),
             VCARD("hasPhoto")
-        );
-        friendPicture = friendPicture ? friendPicture.value : "";
+          );
+          friendPicture = friendPicture ? friendPicture.value : "";
 
-        const friendAccess =
+          const friendAccess =
             permissionStore.statementsMatching(
-            viewerNode,
-            ACL("agent"),
-            rdf.sym(friend.value)
+              viewerNode,
+              ACL("agent"),
+              rdf.sym(friend.value)
             ).length > 0
-            ? true
-            : false;
-        //console.log(friend.value, friendAccess)
-        return {
+              ? true
+              : false;
+          //console.log(friend.value, friendAccess)
+          return {
             name: friendName.value,
             webId: friend.value,
             access: friendAccess,
             picture: friendPicture
-        };
+          };
         });
       });
-      Promise.all(friends).then((results) => {
-          this.setState({ friends: results });
-      })
+      Promise.all(friends).then(results => {
+        this.setState({ friends: results });
+      });
     });
   }
 
@@ -143,10 +143,12 @@ class ContactsPage extends React.Component {
         <Button disabled>Add Friend</Button>
       </div>
     );
+
     const friends = this.state.friends;
     const friendsMarkup = friends.map((friend, index) => {
-        return <ContactSlot friend={friend} key={index}></ContactSlot>
+      return <ContactSlot friend={friend} key={index} />;
     });
+
     return (
       <Container>
         <List>{friendsMarkup}</List>
