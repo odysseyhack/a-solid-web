@@ -3,14 +3,12 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
-import ProfilePicture from "../../functional_components/ProfilePicture";
-
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import JobSlot from "../../functional_components/JobSlot";
 import FriendsNameSlot from "../../functional_components/FriendsNameSlot/FriendsNameSlot";
 import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
 import FriendsProfilePicture from "../../functional_components/FriendsProfilePicture/FriendsProfilePicture";
+import FriendsEmailSlot from "../../functional_components/FriendsEmailSlot/FriendsEmailSlot";
 
 
 
@@ -23,11 +21,11 @@ class FriendsProfile extends React.Component {
         this.state = {
             friendsWebId: "",
             webId: "",
-            friendsName: "",
-            // picture: "",
-            // emails: [],
-            friendsJob: "",
-            friendsBio: ""
+            name: "",
+            picture: "",
+            emails: [],
+            job: "",
+            // bio: ""
 
         };
     }
@@ -76,10 +74,10 @@ class FriendsProfile extends React.Component {
 
 
                     this.setState({
-                        friendsName: nameValue,
-                        friendsJob: jobValue, 
-                        friendsPicture: pictureValue,
-                        friendsBio: bioValue,
+                        name: nameValue,
+                        job: jobValue, 
+                        picture: pictureValue,
+                        bio: bioValue,
                         emails: emails, 
 
                     });
@@ -96,15 +94,22 @@ class FriendsProfile extends React.Component {
     }
 
     render(){
+        const emailSlotMarkup = this.state.emails.map((email) => {
+            return (
+                <FriendsEmailSlot email={email}></FriendsEmailSlot>
+            )
+        })
+
         return (
           <Container>
             <div>
                 <Row>
                     <Col>
-                        <FriendsProfilePicture friendsPicture={this.state.friendsPicture} />
+                        <FriendsProfilePicture friendsPicture={this.state.picture} />
                         <p>{this.state.friendsWebId}</p>
-                        <FriendsNameSlot friendsName={this.state.friendsName}/>
-                        <FriendsJobSlot friendsJob={this.state.friendsJob} />
+                        <FriendsNameSlot name={this.state.name}/>
+                        <FriendsJobSlot job={this.state.job} />
+                        {emailSlotMarkup}
                     </Col>
                 </Row>
             </div>

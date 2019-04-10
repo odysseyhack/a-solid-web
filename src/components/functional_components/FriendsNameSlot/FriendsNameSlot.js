@@ -4,7 +4,6 @@ import Col from "react-bootstrap/Col";
 
 
 const FriendsNameSlot = (props) => {
-    console.log(props)
     return (
         <Row
             style={{ border: "solid #FFF 5px", borderRadius: "10", width: "100%" }}
