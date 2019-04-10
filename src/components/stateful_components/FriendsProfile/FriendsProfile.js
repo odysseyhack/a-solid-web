@@ -8,8 +8,14 @@ class FriendsProfile extends React.Component {
         }
     }
 
+    componentDidMount(){
+        this.setState({
+            friendsWebId: window.location.href.split("?")[1].split("=")[1]
+        })
+    }
+
     render(){
-        return <p>Hello World!</p>
+        return <p>{this.state.friendsWebId}</p>
     }
 }
 
