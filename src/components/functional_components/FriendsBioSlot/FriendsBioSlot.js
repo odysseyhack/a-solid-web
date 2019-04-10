@@ -3,19 +3,19 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Typography } from "yoda-design-system";
 
-const FriendsNameSlot = props => {
+const FriendsBioSlot = props => {
   return (
     <Row>
       <Col lg="3">
-        <Typography variant="subtitle">Name</Typography>
+        <Typography variant="subtitle">Bio</Typography>
       </Col>
       <Col md="9">
         <Row>
-          <Typography variant="paragraph">{props.name}</Typography>
+            <Typography variant="paragraph">{props.bio}</Typography>
         </Row>
       </Col>
     </Row>
   );
 };
 
-export default FriendsNameSlot;
+export default FriendsBioSlot;

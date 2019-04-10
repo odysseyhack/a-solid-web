@@ -9,6 +9,7 @@ import FriendsNameSlot from "../../functional_components/FriendsNameSlot/Friends
 import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
 import FriendsProfilePicture from "../../functional_components/FriendsProfilePicture/FriendsProfilePicture";
 import FriendsEmailSlot from "../../functional_components/FriendsEmailSlot/FriendsEmailSlot";
+import FriendsBioSlot from "../../functional_components/FriendsBioSlot/FriendsBioSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -101,6 +102,7 @@ class FriendsProfile extends React.Component {
               <FriendsProfilePicture friendsPicture={this.state.picture} />
               <FriendsNameSlot name={this.state.name} />
               <FriendsJobSlot job={this.state.job} />
+              <FriendsBioSlot bio={this.state.bio}/>
               {emailSlotMarkup}
             </Col>
           </Row>
