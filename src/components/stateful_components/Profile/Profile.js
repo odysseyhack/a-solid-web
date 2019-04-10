@@ -46,9 +46,11 @@ class Profile extends React.Component {
         console.log("You are not logged in");
       } else {
         const webId = session.webId;
+        const privateCard = webId.replace("profile", "private")
 
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
+        const updater = new rdf.UpdateManager(store);
 
         fetcher.load(webId).then(() => {
           const names = store.each(rdf.sym(webId), FOAF("name")).map(name => {
@@ -117,6 +119,19 @@ class Profile extends React.Component {
             editMode: false
           });
         });
+
+        fetcher.load(privateCard).then(() => {
+          console.log("privateCard exists")
+        }).catch((err) => {
+          let newPrivateProfile;
+          newPrivateProfile = [
+            rdf.st(rdf.sym(privateCard), RDF("type"), FOAF("Person"))
+          ]
+          updater.put(rdf.sym(privateCard), newPrivateProfile, "text/turtle", function(uri, ok, message) {
+            if(ok) console.log("New Private Card has been created");
+            else console.log(message);
+          })  
+        })
       }
     });
   };
