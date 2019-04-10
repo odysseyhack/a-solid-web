@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import JobSlot from "../../functional_components/JobSlot";
 import FriendsNameSlot from "../../functional_components/FriendsNameSlot/FriendsNameSlot";
 import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
+import FriendsProfilePicture from "../../functional_components/FriendsProfilePicture/FriendsProfilePicture";
 
 
 
@@ -51,9 +52,13 @@ class FriendsProfile extends React.Component {
                     const job = store.any(rdf.sym(friendsWebId), VCARD("role"));
                     const jobValue = job ? job.value : "request Access"; 
 
+                    const picture = store.any(rdf.sym(friendsWebId), VCARD("hasPhoto"))
+                    const pictureValue = picture ? picture.value : "request Access"
+
                     this.setState({
                         friendsName: nameValue,
-                        friendsJob: jobValue
+                        friendsJob: jobValue, 
+                        friendsPicture: pictureValue,
 
                     });
                 });
@@ -74,6 +79,7 @@ class FriendsProfile extends React.Component {
             <div>
                 <Row>
                     <Col>
+                        <FriendsProfilePicture friendsPicture={this.state.friendsPicture} />
                         <p>{this.state.friendsWebId}</p>
                         <FriendsNameSlot friendsName={this.state.friendsName}/>
                         <FriendsJobSlot friendsJob={this.state.friendsJob} />
