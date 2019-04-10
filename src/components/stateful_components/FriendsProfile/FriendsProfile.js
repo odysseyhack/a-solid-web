@@ -27,7 +27,7 @@ class FriendsProfile extends React.Component {
             // picture: "",
             // emails: [],
             friendsJob: "",
-            // bio: ""
+            friendsBio: ""
 
         };
     }
@@ -53,12 +53,34 @@ class FriendsProfile extends React.Component {
                     const jobValue = job ? job.value : "request Access"; 
 
                     const picture = store.any(rdf.sym(friendsWebId), VCARD("hasPhoto"))
-                    const pictureValue = picture ? picture.value : "request Access"
+                    const pictureValue = picture ? picture.value : "request Access";
+
+                    const bio = store.any(rdf.sym(friendsWebId), VCARD("role"));
+                    const bioValue = bio ? bio.value : "request Access"; 
+                    console.log(bioValue);
+
+
+                    const emails = store
+                       .each(rdf.sym(webId), VCARD("hasEmail"))
+                       .map(emailBlankId => {
+                           const email = store.any(rdf.sym(emailBlankId), VCARD("value"));
+                           const emailValue = email.value;
+
+                           const emailType = store.any(rdf.sym(emailBlankId), RDF("type"));
+                           const emailTypeValue = emailType
+                            ? emailType.value.split("#")[1] + "-Email" : "Request Access";
+
+                           return [emailValue, emailBlankId.value, emailTypeValue];
+                       }); 
+                       
+
 
                     this.setState({
                         friendsName: nameValue,
                         friendsJob: jobValue, 
                         friendsPicture: pictureValue,
+                        friendsBio: bioValue,
+                        emails: emails, 
 
                     });
                 });
