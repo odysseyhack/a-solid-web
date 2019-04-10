@@ -7,6 +7,7 @@ const FriendsEmailSlot = props => {
   const email = props.email[0].split(":")[1];
   const emailType = props.email[2];
 
+  console.log(props.email)
   return (
     <Row>
       <Col lg="3">
