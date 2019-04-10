@@ -72,6 +72,12 @@ class FriendsProfile extends React.Component {
     }
 
     render(){
+        const emailSlotMarkup = this.state.emails.map((email) => {
+            return (
+                <FriendsEmailSlot email={email}></FriendsEmailSlot>
+            )
+        })
+
         return (
           <Container>
             <div>
@@ -81,7 +87,7 @@ class FriendsProfile extends React.Component {
                         <p>{this.state.friendsWebId}</p>
                         <FriendsNameSlot name={this.state.name}/>
                         <FriendsJobSlot job={this.state.job} />
-                        {/* <FriendsEmailSlot email={this.state.email}/> */}
+                        {emailSlotMarkup}
                     </Col>
                 </Row>
             </div>
