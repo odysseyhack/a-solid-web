@@ -53,7 +53,6 @@ class FriendsProfile extends React.Component {
 
           const bio = store.any(rdf.sym(friendsWebId), VCARD("role"));
           const bioValue = bio ? bio.value : "request Access";
-          console.log(bioValue);
 
           const emails = store
             .each(rdf.sym(friendsWebId), VCARD("hasEmail"))
@@ -68,33 +67,34 @@ class FriendsProfile extends React.Component {
 
               return [emailValue, emailBlankId.value, emailTypeValue];
             });
-					
-					const telephones = store
-						.each(rdf.sym(friendsWebId), VCARD("hasTelephone"))
-						.map(telephoneBlankId => {
-							const telephone = store.any(rdf.sym(telephoneBlankId),
-							VCARD("value")
-							);
-							const telephoneValue = telephone.value;
 
-							const telephoneType = store.any(
-								rdf.sym(telephoneBlankId), 
-								RDF("type")
-							); 
-							const telephoneTypeValue = telephoneType
-								? telephoneType.value.split("#")[1] + "-Phone"
-								: "Phone"; 
-							console.log(telephoneTypeValue);
-							return [telephoneValue, telephoneBlankId, telephoneTypeValue];
-						}); 
+          const telephones = store
+            .each(rdf.sym(friendsWebId), VCARD("hasTelephone"))
+            .map(telephoneBlankId => {
+              const telephone = store.any(
+                rdf.sym(telephoneBlankId),
+                VCARD("value")
+              );
+              const telephoneValue = telephone.value;
+
+              const telephoneType = store.any(
+                rdf.sym(telephoneBlankId),
+                RDF("type")
+              );
+              const telephoneTypeValue = telephoneType
+                ? telephoneType.value.split("#")[1] + "-Phone"
+                : "Phone";
+
+              return [telephoneValue, telephoneBlankId, telephoneTypeValue];
+            });
 
           this.setState({
             name: nameValue,
             job: jobValue,
             picture: pictureValue,
             bio: bioValue,
-						emails: emails, 
-						telephones: telephones, 
+            emails: emails,
+            telephones: telephones
           });
         });
       }
