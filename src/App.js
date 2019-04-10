@@ -4,6 +4,7 @@ import Profile from "./components/stateful_components/Profile";
 import ContactsPage from "./components/stateful_components/ContactsPage"
 import Navigation from "./components/stateful_components/Navigation";
 import auth from "solid-auth-client";
+import FriendsProfile from "./components/stateful_components/FriendsProfile/FriendsProfile";
 
 class App extends React.Component {
   constructor(props) {
@@ -66,6 +67,7 @@ class App extends React.Component {
               exact
             />
             <Route path="/contacts" render={() => <ContactsPage />} exact />
+            <Route path="/friend" render={() => <FriendsProfile />} exact />
           </Switch>
         </div>
       </BrowserRouter>

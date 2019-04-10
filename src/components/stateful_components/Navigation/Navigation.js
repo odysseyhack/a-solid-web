@@ -79,6 +79,12 @@ class Navigation extends React.Component {
             >
               Contacts
             </NavLink>
+            <NavLink
+              to="/friend"
+              style={{ color: "#000", marginLeft: "10%" }}
+            >
+              Friend
+            </NavLink>
           </Nav>
           {this.props.webId ? (
             ""
