@@ -165,7 +165,8 @@ class Profile extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
-  applyNameChanges() {
+  applyNameChanges(e) {
+    const oldName = e.target.placeholder;
     const store = rdf.graph();
     const updater = new rdf.UpdateManager(store);
 
@@ -175,7 +176,7 @@ class Profile extends React.Component {
     del = rdf.st(
       rdf.sym(this.props.webId),
       FOAF("name"),
-      rdf.lit(this.state.name),
+      rdf.lit(oldName),
       rdf.sym(this.props.webId).doc()
     );
     ins = rdf.st(
@@ -207,7 +208,8 @@ class Profile extends React.Component {
     this.setState({ editName: !this.state.editName });
   }
 
-  applyBioChanges() {
+  applyBioChanges(e) {
+    const oldBio = e.target.placeholder;
     const store = rdf.graph();
     const updater = new rdf.UpdateManager(store);
 
@@ -217,7 +219,7 @@ class Profile extends React.Component {
     del = rdf.st(
       rdf.sym(this.props.webId),
       VCARD("note"),
-      rdf.lit(this.state.bio),
+      rdf.lit(oldBio),
       rdf.sym(this.props.webId).doc()
     );
     ins = rdf.st(
@@ -297,7 +299,8 @@ class Profile extends React.Component {
     this.setState({ editEmail: !this.state.editEmail });
   }
 
-  applyJobChanges() {
+  applyJobChanges(e) {
+    const oldJob = e.target.placeholder;
     const store = rdf.graph();
     const updater = new rdf.UpdateManager(store);
 
@@ -307,7 +310,7 @@ class Profile extends React.Component {
     del = rdf.st(
       rdf.sym(this.props.webId),
       VCARD("role"),
-      rdf.lit(this.state.job),
+      rdf.lit(oldJob),
       rdf.sym(this.props.webId).doc()
     );
     ins = rdf.st(
