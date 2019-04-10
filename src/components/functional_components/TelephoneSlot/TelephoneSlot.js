@@ -25,7 +25,7 @@ const TelephoneSlot = props => {
   const dropDownMarkup = (access === "public") ? (
     <div>
       <Dropdown.Item disabled>Public</Dropdown.Item>
-      <Dropdown.Item>Private</Dropdown.Item>
+      <Dropdown.Item id={props.telephone[1].value + "?" + props.telephone[0]} onClick={props.onToggleAccess}>Private</Dropdown.Item>
     </div>
   ) : (
     <div>
