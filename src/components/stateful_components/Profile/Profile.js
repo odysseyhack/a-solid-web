@@ -336,39 +336,43 @@ class Profile extends React.Component {
   }
 
   applyTelephoneChanges(e) {
-    const oldTelephone = e.target.placeholder;
-    const oldTelephoneBlankId = e.target.id;
-
-    const store = rdf.graph();
-    const updater = new rdf.UpdateManager(store);
-
-    var del;
-    var ins;
-
-    del = rdf.st(
-      rdf.sym(oldTelephoneBlankId),
-      VCARD("value"),
-      rdf.sym("tel:" + oldTelephone),
-      rdf.sym(this.state.webId).doc()
-    );
-    ins = rdf.st(
-      rdf.sym(oldTelephoneBlankId),
-      VCARD("value"),
-      rdf.sym("tel:" + this.state.newTelephone),
-      rdf.sym(this.state.webId).doc()
-    );
-
-    var updatePromise = new Promise((resolve, reject) => {
-      updater.update(del, ins, (uri, ok, message) => {
-        if (ok) {
-          resolve();
-        } else reject(message);
+    if (this.state.newTelephone !== ""){
+      const oldTelephone = e.target.placeholder;
+      const oldTelephoneBlankId = e.target.id;
+  
+      const store = rdf.graph();
+      const updater = new rdf.UpdateManager(store);
+  
+      var del;
+      var ins;
+  
+      del = rdf.st(
+        rdf.sym(oldTelephoneBlankId),
+        VCARD("value"),
+        rdf.sym("tel:" + oldTelephone),
+        rdf.sym(this.state.webId).doc()
+      );
+      ins = rdf.st(
+        rdf.sym(oldTelephoneBlankId),
+        VCARD("value"),
+        rdf.sym("tel:" + this.state.newTelephone),
+        rdf.sym(this.state.webId).doc()
+      );
+  
+      var updatePromise = new Promise((resolve, reject) => {
+        updater.update(del, ins, (uri, ok, message) => {
+          if (ok) {
+            resolve();
+          } else reject(message);
+        });
       });
-    });
-    updatePromise.then(() => {
+      updatePromise.then(() => {
+        this.setState({ editTelephone: false });
+        this.fetchUser();
+      });
+    } else {
       this.setState({ editTelephone: false });
-      this.fetchUser();
-    });
+    }
   }
 
   getNewTelephone(e) {
