@@ -21,11 +21,11 @@ class Profile extends React.Component {
     super(props);
     this.state = {
       webId: undefined,
-      name: "",
+      name: [],
       picture: "",
       emails: [],
-      job: "",
-      bio: "",
+      job: [],
+      bio: [],
       telephones: [],
       newName: "",
       editName: false,
@@ -51,17 +51,20 @@ class Profile extends React.Component {
         const fetcher = new rdf.Fetcher(store);
 
         fetcher.load(webId).then(() => {
-          const name = store.any(rdf.sym(webId), FOAF("name"));
-          const nameValue = name ? name.value : undefined;
+          const names = store.each(rdf.sym(webId), FOAF("name")).map(name => {
+            return [name.value, "public"];
+          });
 
           const picture = store.any(rdf.sym(webId), VCARD("hasPhoto"));
           const pictureValue = picture ? picture.value : "";
 
-          const job = store.any(rdf.sym(webId), VCARD("role"));
-          const jobValue = job ? job.value : "";
+          const jobs = store.each(rdf.sym(webId), VCARD("role")).map(job => {
+            return [job.value, "public"];
+          });
 
-          const bio = store.any(rdf.sym(webId), VCARD("note"));
-          const bioValue = bio ? bio.value : undefined;
+          const bios = store.each(rdf.sym(webId), VCARD("note")).map(bio => {
+            return [bio.value, "public"];
+          });
 
           const emails = store
             .each(rdf.sym(webId), VCARD("hasEmail"))
@@ -74,7 +77,7 @@ class Profile extends React.Component {
                 ? emailType.value.split("#")[1] + "-Email"
                 : "Email";
 
-              return [emailValue, emailBlankId.value, emailTypeValue];
+              return [emailValue, emailBlankId.value, emailTypeValue, "public"];
             });
 
           const telephones = store
@@ -94,18 +97,18 @@ class Profile extends React.Component {
                 ? telephoneType.value.split("#")[1] + "-Phone"
                 : "Phone";
 
-              return [telephoneValue, telephoneBlankId, telephoneTypeValue];
+              return [telephoneValue, telephoneBlankId, telephoneTypeValue, "public"];
             });
 
           this.setState({
             webId: webId,
-            name: nameValue,
+            name: names,
             picture: pictureValue,
             emails: emails,
-            job: jobValue,
-            bio: bioValue,
+            job: jobs,
+            bio: bios,
             telephones: telephones,
-            newName: nameValue,
+            newName: names[0],
             editMode: false
           });
         });
@@ -336,16 +339,16 @@ class Profile extends React.Component {
   }
 
   applyTelephoneChanges(e) {
-    if (this.state.newTelephone !== ""){
+    if (this.state.newTelephone !== "") {
       const oldTelephone = e.target.placeholder;
       const oldTelephoneBlankId = e.target.id;
-  
+
       const store = rdf.graph();
       const updater = new rdf.UpdateManager(store);
-  
+
       var del;
       var ins;
-  
+
       del = rdf.st(
         rdf.sym(oldTelephoneBlankId),
         VCARD("value"),
@@ -358,7 +361,7 @@ class Profile extends React.Component {
         rdf.sym("tel:" + this.state.newTelephone),
         rdf.sym(this.state.webId).doc()
       );
-  
+
       var updatePromise = new Promise((resolve, reject) => {
         updater.update(del, ins, (uri, ok, message) => {
           if (ok) {
@@ -388,59 +391,47 @@ class Profile extends React.Component {
   }
 
   render() {
-    let nameSlotMarkup = this.state.name ? (
-      <NameSlot
-        name={this.state.name}
-        editMode={this.state.editName}
-        onBlur={this.applyNameChanges.bind(this)}
-        onChange={this.getNewName.bind(this)}
-        onClick={this.toggleEditName.bind(this)}
-      />
-    ) : (
-      <NameSlot
-        name="You did not enter your name yet..."
-        editMode={this.state.editName}
-        onBlur={this.applyNameChanges.bind(this)}
-        onChange={this.getNewName.bind(this)}
-        onClick={this.toggleEditName.bind(this)}
-      />
-    );
+    let nameSlotMarkup = this.state.name.map((name, index) => {
+      return (
+        <NameSlot
+          name={name[0]}
+          access={name[1]}
+          key={index}
+          editMode={this.state.editName}
+          onBlur={this.applyNameChanges.bind(this)}
+          onChange={this.getNewName.bind(this)}
+          onClick={this.toggleEditName.bind(this)}
+        />
+      )
+    })
 
-    let jobSlotMarkup = this.state.job ? (
-      <JobSlot
-        job={this.state.job}
-        editMode={this.state.editJob}
-        onBlur={this.applyJobChanges.bind(this)}
-        onChange={this.getNewJob.bind(this)}
-        onClick={this.toggleEditJob.bind(this)}
-      />
-    ) : (
-      <JobSlot
-        job="You did not enter your job yet..."
-        editMode={this.state.editJob}
-        onBlur={this.applyJobChanges.bind(this)}
-        onChange={this.getNewJob.bind(this)}
-        onClick={this.toggleEditJob.bind(this)}
-      />
-    );
+    let jobSlotMarkup = this.state.job.map((job, index) => {
+      return (
+        <JobSlot
+          job={job[0]}
+          access={job[1]}
+          key={index}
+          editMode={this.state.editJob}
+          onBlur={this.applyJobChanges.bind(this)}
+          onChange={this.getNewJob.bind(this)}
+          onClick={this.toggleEditJob.bind(this)}
+        />
+      );
+    })
 
-    let bioSlotMarkup = this.state.bio ? (
-      <BioSlot
-        bio={this.state.bio}
-        editMode={this.state.editBio}
-        onBlur={this.applyBioChanges.bind(this)}
-        onChange={this.getNewBio.bind(this)}
-        onClick={this.toggleEditBio.bind(this)}
-      />
-    ) : (
-      <BioSlot
-        bio="You do not have a bio yet..."
-        editMode={this.state.editBio}
-        onBlur={this.applyBioChanges.bind(this)}
-        onChange={this.getNewBio.bind(this)}
-        onClick={this.toggleEditBio.bind(this)}
-      />
-    );
+    let bioSlotMarkup = this.state.bio.map((bio, index) => {
+      return (
+        <BioSlot
+          bio={bio[0]}
+          access={bio[1]}
+          key={index}
+          editMode={this.state.editBio}
+          onBlur={this.applyBioChanges.bind(this)}
+          onChange={this.getNewBio.bind(this)}
+          onClick={this.toggleEditBio.bind(this)}
+        />
+      )
+    });
 
     let emailSlotsMarkup = this.state.emails.map((email, index) => {
       return (
