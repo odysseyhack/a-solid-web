@@ -44,16 +44,16 @@ class FriendsProfile extends React.Component {
 
         fetcher.load(friendsWebId).then(() => {
           const name = store.any(rdf.sym(friendsWebId), FOAF("name"));
-          const nameValue = name ? name.value : "request Access";
+          const nameValue = name ? name.value : "-";
 
           const job = store.any(rdf.sym(friendsWebId), VCARD("role"));
-          const jobValue = job ? job.value : "request Access";
+          const jobValue = job ? job.value : "-";
 
           const picture = store.any(rdf.sym(friendsWebId), VCARD("hasPhoto"));
-          const pictureValue = picture ? picture.value : "request Access";
+          const pictureValue = picture ? picture.value : "-";
 
-          const bio = store.any(rdf.sym(friendsWebId), VCARD("role"));
-          const bioValue = bio ? bio.value : "request Access";
+          const bio = store.any(rdf.sym(friendsWebId), VCARD("note"));
+          const bioValue = bio ? bio.value : "-";
           console.log(bioValue);
 
           const emails = store
