@@ -9,10 +9,7 @@ import FriendsNameSlot from "../../functional_components/FriendsNameSlot/Friends
 import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
 import FriendsProfilePicture from "../../functional_components/FriendsProfilePicture/FriendsProfilePicture";
 import FriendsEmailSlot from "../../functional_components/FriendsEmailSlot/FriendsEmailSlot";
-<<<<<<< HEAD
 import FriendsBioSlot from "../../functional_components/FriendsBioSlot/FriendsBioSlot";
-=======
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -27,13 +24,9 @@ class FriendsProfile extends React.Component {
       name: "",
       picture: "",
       emails: [],
-<<<<<<< HEAD
-      job: ""
-      // bio: ""
-=======
       job: "",
-      telephones: ""
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
+			telephones: "",
+			bio: ""
     };
   }
 
