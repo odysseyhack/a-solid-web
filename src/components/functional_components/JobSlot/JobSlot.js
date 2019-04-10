@@ -2,8 +2,9 @@ import React from "react";
 import FormControl from "react-bootstrap/FormControl";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {Typography} from "yoda-design-system";
 
-const JobSlot = (props) => {
+const JobSlot = props => {
   let jobDisplay = props.editMode ? (
     <FormControl
       placeholder={props.job}
@@ -12,16 +13,15 @@ const JobSlot = (props) => {
       defaultValue={props.job}
     />
   ) : (
-    <p onClick={props.onClick}>
-      {props.job}
-    </p>
+    <p onClick={props.onClick}>{props.job}</p>
   );
 
   return (
-    <Row
-      style={{ border: "solid #FFF 5px", borderRadius: "10", width: "100%" }}
-    >
-      <Col md="8">
+    <Row>
+      <Col lg="3">
+        <Typography variant="subtitle">Job</Typography>
+      </Col>
+      <Col md="9">
         <Row style={{ width: "100%" }}>{jobDisplay}</Row>
       </Col>
     </Row>
