@@ -6,16 +6,31 @@ import { Typography } from "yoda-design-system";
 import Dropdown from "react-bootstrap/Dropdown";
 
 const BioSlot = props => {
+  const bio = props.bio[0];
+  const access = props.bio[1];
+
   let bioDisplay = props.editMode ? (
     <FormControl
-      placeholder={props.bio}
+      placeholder={bio}
       onChange={props.onChange}
       onBlur={props.onBlur}
-      defaultValue={props.bio}
+      defaultValue={bio}
     />
   ) : (
-    <p onClick={props.onClick}>{props.bio}</p>
+    <p onClick={props.onClick}>{bio}</p>
   );
+
+  const dropDownMarkup = (access === "public") ? (
+    <div>
+      <Dropdown.Item disabled>Public</Dropdown.Item>
+      <Dropdown.Item>Private</Dropdown.Item>
+    </div>
+  ) : (
+    <div>
+      <Dropdown.Item>Public</Dropdown.Item>
+      <Dropdown.Item disabled>Private</Dropdown.Item>
+    </div>
+  )
 
   return (
     <div>
@@ -31,8 +46,7 @@ const BioSlot = props => {
           <Dropdown size="sm">
             <Dropdown.Toggle variant="secondary">Access</Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>Public</Dropdown.Item>
-              <Dropdown.Item>Private</Dropdown.Item>
+              {dropDownMarkup}
             </Dropdown.Menu>
           </Dropdown>
         </Col>

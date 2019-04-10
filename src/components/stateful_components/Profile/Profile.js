@@ -397,8 +397,7 @@ class Profile extends React.Component {
     let nameSlotMarkup = this.state.name.map((name, index) => {
       return (
         <NameSlot
-          name={name[0]}
-          access={name[1]}
+          name={name}
           key={index}
           editMode={this.state.editName}
           onBlur={this.applyNameChanges.bind(this)}
@@ -411,8 +410,7 @@ class Profile extends React.Component {
     let jobSlotMarkup = this.state.job.map((job, index) => {
       return (
         <JobSlot
-          job={job[0]}
-          access={job[1]}
+          job={job}
           key={index}
           editMode={this.state.editJob}
           onBlur={this.applyJobChanges.bind(this)}
@@ -425,8 +423,7 @@ class Profile extends React.Component {
     let bioSlotMarkup = this.state.bio.map((bio, index) => {
       return (
         <BioSlot
-          bio={bio[0]}
-          access={bio[1]}
+          bio={bio}
           key={index}
           editMode={this.state.editBio}
           onBlur={this.applyBioChanges.bind(this)}

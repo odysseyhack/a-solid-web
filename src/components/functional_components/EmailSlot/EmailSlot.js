@@ -8,6 +8,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 const EmailSlot = props => {
   const email = props.email[0].split(":")[1];
   const emailType = props.email[2];
+  const access = props.email[3]
 
   let emailDisplay = props.editMode ? (
     <FormControl
@@ -21,6 +22,18 @@ const EmailSlot = props => {
     <p onClick={props.onClick}>{email}</p>
   );
 
+  const dropDownMarkup = (access === "public") ? (
+    <div>
+      <Dropdown.Item disabled>Public</Dropdown.Item>
+      <Dropdown.Item>Private</Dropdown.Item>
+    </div>
+  ) : (
+    <div>
+      <Dropdown.Item>Public</Dropdown.Item>
+      <Dropdown.Item disabled>Private</Dropdown.Item>
+    </div>
+  )
+
   return (
     <Row>
       <Col lg="3">
@@ -33,8 +46,7 @@ const EmailSlot = props => {
         <Dropdown size="sm">
           <Dropdown.Toggle variant="secondary">Access</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item>Public</Dropdown.Item>
-            <Dropdown.Item>Private</Dropdown.Item>
+            {dropDownMarkup}
           </Dropdown.Menu>
         </Dropdown>
       </Col>

@@ -6,16 +6,31 @@ import { Typography } from "yoda-design-system";
 import Dropdown from "react-bootstrap/Dropdown";
 
 const JobSlot = props => {
+  const job = props.job[0]
+  const access = props.job[1]
+
   let jobDisplay = props.editMode ? (
     <FormControl
-      placeholder={props.job}
+      placeholder={job}
       onChange={props.onChange}
       onBlur={props.onBlur}
-      defaultValue={props.job}
+      defaultValue={job}
     />
   ) : (
-    <p onClick={props.onClick}>{props.job}</p>
+    <p onClick={props.onClick}>{job}</p>
   );
+
+  const dropDownMarkup = (access === "public") ? (
+    <div>
+      <Dropdown.Item disabled>Public</Dropdown.Item>
+      <Dropdown.Item>Private</Dropdown.Item>
+    </div>
+  ) : (
+    <div>
+      <Dropdown.Item>Public</Dropdown.Item>
+      <Dropdown.Item disabled>Private</Dropdown.Item>
+    </div>
+  )
 
   return (
     <Row>
@@ -29,8 +44,7 @@ const JobSlot = props => {
         <Dropdown size="sm">
           <Dropdown.Toggle variant="secondary">Access</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item>Public</Dropdown.Item>
-            <Dropdown.Item>Private</Dropdown.Item>
+            {dropDownMarkup}
           </Dropdown.Menu>
         </Dropdown>
       </Col>

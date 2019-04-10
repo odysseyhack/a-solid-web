@@ -8,6 +8,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 const TelephoneSlot = props => {
   const telephone = props.telephone[0].split(":")[1];
   const telephoneType = props.telephone[2];
+  const access = props.telephone[3]
 
   let telephoneDisplay = props.editMode ? (
     <FormControl
@@ -21,6 +22,18 @@ const TelephoneSlot = props => {
     <p onClick={props.onClick}>{telephone}</p>
   );
 
+  const dropDownMarkup = (access === "public") ? (
+    <div>
+      <Dropdown.Item disabled>Public</Dropdown.Item>
+      <Dropdown.Item>Private</Dropdown.Item>
+    </div>
+  ) : (
+    <div>
+      <Dropdown.Item>Public</Dropdown.Item>
+      <Dropdown.Item disabled>Private</Dropdown.Item>
+    </div>
+  )
+
   return (
     <Row>
       <Col lg="3">
@@ -33,8 +46,7 @@ const TelephoneSlot = props => {
         <Dropdown size="sm">
           <Dropdown.Toggle variant="secondary">Access</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item>Public</Dropdown.Item>
-            <Dropdown.Item>Private</Dropdown.Item>
+            {dropDownMarkup}
           </Dropdown.Menu>
         </Dropdown>
       </Col>

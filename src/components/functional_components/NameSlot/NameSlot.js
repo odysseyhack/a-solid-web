@@ -6,16 +6,31 @@ import { Typography } from "yoda-design-system";
 import Dropdown from "react-bootstrap/Dropdown";
 
 const NameSlot = props => {
+  const name = props.name[0]
+  const access = props.name[1]
+
   let nameDisplay = props.editMode ? (
     <FormControl
-      placeholder={props.name}
+      placeholder={name}
       onChange={props.onChange}
       onBlur={props.onBlur}
-      defaultValue={props.name}
+      defaultValue={name}
     />
   ) : (
-    <p onClick={props.onClick}>{props.name}</p>
+    <p onClick={props.onClick}>{name}</p>
   );
+
+  const dropDownMarkup = (access === "public") ? (
+    <div>
+      <Dropdown.Item disabled>Public</Dropdown.Item>
+      <Dropdown.Item>Private</Dropdown.Item>
+    </div>
+  ) : (
+    <div>
+      <Dropdown.Item>Public</Dropdown.Item>
+      <Dropdown.Item disabled>Private</Dropdown.Item>
+    </div>
+  )
 
   return (
     <Row>
@@ -29,8 +44,7 @@ const NameSlot = props => {
         <Dropdown size="sm">
           <Dropdown.Toggle variant="secondary">Access</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item>Public</Dropdown.Item>
-            <Dropdown.Item>Private</Dropdown.Item>
+            {dropDownMarkup}
           </Dropdown.Menu>
         </Dropdown>
       </Col>
