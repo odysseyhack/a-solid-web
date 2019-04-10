@@ -1,21 +1,88 @@
 import React from "react";
+import rdf from "rdflib";
+import auth from "solid-auth-client";
+import { Button } from "yoda-design-system";
+import Container from "react-bootstrap/Container";
+import ProfilePicture from "../../functional_components/ProfilePicture";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import JobSlot from "../../functional_components/JobSlot";
+import FriendsNameSlot from "../../functional_components/FriendsNameSlot/FriendsNameSlot";
+import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
+
+
+
+const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
+const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
 
 class FriendsProfile extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            friendsWebId: ""
-        }
+            friendsWebId: "",
+            webId: "",
+            friendsName: "",
+            // picture: "",
+            // emails: [],
+            friendsJob: "",
+            // bio: ""
+
+        };
     }
+
+    fetchUser = () => {
+        auth.trackSession(session => {
+            if(!session) {
+                console.log("You are not logged in")
+            } else {
+                this.setState({webId: session.webId});
+                console.log("You are logged in. Fetching friends data.")
+
+                const store = rdf.graph(); 
+                const fetcher = new rdf.Fetcher(store); 
+
+                const friendsWebId = this.state.friendsWebId;
+
+                fetcher.load(friendsWebId).then(() => {
+                    const name = store.any(rdf.sym(friendsWebId), FOAF("name"));
+                    const nameValue = name ? name.value : "request Access"; 
+                    
+                    const job = store.any(rdf.sym(friendsWebId), VCARD("role"));
+                    const jobValue = job ? job.value : "request Access"; 
+
+                    this.setState({
+                        friendsName: nameValue,
+                        friendsJob: jobValue
+
+                    });
+                });
+            }
+        });
+    };
 
     componentDidMount(){
         this.setState({
             friendsWebId: window.location.href.split("?")[1].split("=")[1]
         })
+        this.fetchUser(); 
     }
 
     render(){
-        return <p>{this.state.friendsWebId}</p>
+        return (
+          <Container>
+            <div>
+                <Row>
+                    <Col>
+                        <p>{this.state.friendsWebId}</p>
+                        <FriendsNameSlot friendsName={this.state.friendsName}/>
+                        <FriendsJobSlot friendsJob={this.state.friendsJob} />
+                    </Col>
+                </Row>
+            </div>
+          </Container>  
+        )
+        
     }
 }
 
