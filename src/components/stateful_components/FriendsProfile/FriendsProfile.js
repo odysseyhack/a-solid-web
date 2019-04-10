@@ -3,14 +3,12 @@ import rdf from "rdflib";
 import auth from "solid-auth-client";
 import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
-import ProfilePicture from "../../functional_components/ProfilePicture";
-
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import JobSlot from "../../functional_components/JobSlot";
 import FriendsNameSlot from "../../functional_components/FriendsNameSlot/FriendsNameSlot";
 import FriendsJobSlot from "../../functional_components/FriendsJobSlot/FriendsJobSlot";
 import FriendsProfilePicture from "../../functional_components/FriendsProfilePicture/FriendsProfilePicture";
+import FriendsEmailSlot from "../../functional_components/FriendsEmailSlot/FriendsEmailSlot";
 
 
 
@@ -83,6 +81,7 @@ class FriendsProfile extends React.Component {
                         <p>{this.state.friendsWebId}</p>
                         <FriendsNameSlot friendsName={this.state.friendsName}/>
                         <FriendsJobSlot friendsJob={this.state.friendsJob} />
+                        <FriendsEmailSlot email={this.state.email}/>
                     </Col>
                 </Row>
             </div>
