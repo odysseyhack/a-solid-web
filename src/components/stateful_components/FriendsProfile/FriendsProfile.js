@@ -52,7 +52,6 @@ class FriendsProfile extends React.Component {
 
         fetcher.load(friendsWebId).then(() => {
           const name = store.any(rdf.sym(friendsWebId), FOAF("name"));
-<<<<<<< HEAD
           const nameValue = name ? name.value : "-";
 
           const job = store.any(rdf.sym(friendsWebId), VCARD("role"));
@@ -64,18 +63,6 @@ class FriendsProfile extends React.Component {
           const bio = store.any(rdf.sym(friendsWebId), VCARD("note"));
           const bioValue = bio ? bio.value : "-";
           console.log(bioValue);
-=======
-          const nameValue = name ? name.value : "request Access";
-
-          const job = store.any(rdf.sym(friendsWebId), VCARD("role"));
-          const jobValue = job ? job.value : "request Access";
-
-          const picture = store.any(rdf.sym(friendsWebId), VCARD("hasPhoto"));
-          const pictureValue = picture ? picture.value : "request Access";
-
-          const bio = store.any(rdf.sym(friendsWebId), VCARD("role"));
-          const bioValue = bio ? bio.value : "request Access";
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
 
           const emails = store
             .each(rdf.sym(friendsWebId), VCARD("hasEmail"))
@@ -91,8 +78,6 @@ class FriendsProfile extends React.Component {
               return [emailValue, emailBlankId.value, emailTypeValue];
             });
 
-<<<<<<< HEAD
-=======
           const telephones = store
             .each(rdf.sym(friendsWebId), VCARD("hasTelephone"))
             .map(telephoneBlankId => {
@@ -113,18 +98,13 @@ class FriendsProfile extends React.Component {
               return [telephoneValue, telephoneBlankId, telephoneTypeValue];
             });
 
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
           this.setState({
             name: nameValue,
             job: jobValue,
             picture: pictureValue,
             bio: bioValue,
-<<<<<<< HEAD
-            emails: emails
-=======
             emails: emails,
             telephones: telephones
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
           });
         });
       }
@@ -139,13 +119,8 @@ class FriendsProfile extends React.Component {
   }
 
   render() {
-<<<<<<< HEAD
     const emailSlotMarkup = this.state.emails.map((email, index) => {
       return <FriendsEmailSlot email={email} key={index} />;
-=======
-    const emailSlotMarkup = this.state.emails.map(email => {
-      return <FriendsEmailSlot email={email} />;
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
     });
 
     return (
@@ -154,15 +129,9 @@ class FriendsProfile extends React.Component {
           <Row>
             <Col>
               <FriendsProfilePicture friendsPicture={this.state.picture} />
-<<<<<<< HEAD
               <FriendsNameSlot name={this.state.name} />
               <FriendsJobSlot job={this.state.job} />
               <FriendsBioSlot bio={this.state.bio}/>
-=======
-              <p>{this.state.friendsWebId}</p>
-              <FriendsNameSlot name={this.state.name} />
-              <FriendsJobSlot job={this.state.job} />
->>>>>>> 7a0bbf88d6621f9236054b599da0c766e4bf10e9
               {emailSlotMarkup}
             </Col>
           </Row>
