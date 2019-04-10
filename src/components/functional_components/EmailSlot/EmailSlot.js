@@ -2,9 +2,11 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
+import { Typography } from "yoda-design-system";
 
-const EmailSlot = (props) => {
-  const email = props.email[0].split(":")[1]
+const EmailSlot = props => {
+  const email = props.email[0].split(":")[1];
+  const emailType = props.email[2];
 
   let emailDisplay = props.editMode ? (
     <FormControl
@@ -19,11 +21,12 @@ const EmailSlot = (props) => {
   );
 
   return (
-    <Row
-      style={{ border: "solid #FFF 5px", borderRadius: "10", width: "100%" }}
-    >
-      <Col md="8">
-        <Row style={{ width: "100%" }}>{emailDisplay}</Row>
+    <Row>
+      <Col lg="3">
+        <Typography variant="subtitle">{emailType}</Typography>
+      </Col>
+      <Col md="9">
+        <Row>{emailDisplay}</Row>
       </Col>
     </Row>
   );

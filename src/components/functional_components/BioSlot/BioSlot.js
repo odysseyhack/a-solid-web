@@ -2,6 +2,7 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
+import { Typography } from "yoda-design-system";
 
 const BioSlot = (props) => {
   let bioDisplay = props.editMode ? (
@@ -16,13 +17,19 @@ const BioSlot = (props) => {
   );
 
   return (
-    <Row
-      style={{ border: "solid #FFF 5px", borderRadius: "10", width: "100%" }}
-    >
-      <Col md="8">
-        <Row style={{ width: "100%" }}>{bioDisplay}</Row>
-      </Col>
-    </Row>
+    <div>
+      <Row>
+      </Row>
+      <Row
+      >
+        <Col lg="3">
+          <Typography variant="subtitle">Bio</Typography>
+        </Col>
+        <Col lg="9">
+          <Row>{bioDisplay}</Row>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

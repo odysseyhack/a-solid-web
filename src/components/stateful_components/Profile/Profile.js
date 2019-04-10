@@ -14,6 +14,7 @@ import JobSlot from "../../functional_components/JobSlot";
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
+const RDF = new rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
 class Profile extends React.Component {
   constructor(props) {
@@ -53,17 +54,6 @@ class Profile extends React.Component {
           const name = store.any(rdf.sym(webId), FOAF("name"));
           const nameValue = name ? name.value : undefined;
 
-          var emails = [];
-          store
-            .each(rdf.sym(webId), VCARD("hasEmail"))
-            .forEach(emailBlankId => {
-              store
-                .each(rdf.sym(emailBlankId), VCARD("value"))
-                .forEach(emailAddress => {
-                  emails.push([emailAddress.value, emailBlankId.value]);
-                });
-            });
-
           const picture = store.any(rdf.sym(webId), VCARD("hasPhoto"));
           const pictureValue = picture ? picture.value : "";
 
@@ -73,18 +63,38 @@ class Profile extends React.Component {
           const bio = store.any(rdf.sym(webId), VCARD("note"));
           const bioValue = bio ? bio.value : undefined;
 
-          var telephones = [];
-          store
+          const emails = store
+            .each(rdf.sym(webId), VCARD("hasEmail"))
+            .map(emailBlankId => {
+              const email = store.any(rdf.sym(emailBlankId), VCARD("value"));
+              const emailValue = email.value;
+
+              const emailType = store.any(rdf.sym(emailBlankId), RDF("type"));
+              const emailTypeValue = emailType
+                ? emailType.value.split("#")[1] + "-Email"
+                : "Email";
+
+              return [emailValue, emailBlankId.value, emailTypeValue];
+            });
+
+          const telephones = store
             .each(rdf.sym(webId), VCARD("hasTelephone"))
-            .forEach(telephoneBlankId => {
-              store
-                .each(rdf.sym(telephoneBlankId), VCARD("value"))
-                .forEach(telephoneNumber => {
-                  telephones.push([
-                    telephoneNumber.value,
-                    telephoneBlankId.value
-                  ]);
-                });
+            .map(telephoneBlankId => {
+              const telephone = store.any(
+                rdf.sym(telephoneBlankId),
+                VCARD("value")
+              );
+              const telephoneValue = telephone.value;
+
+              const telephoneType = store.any(
+                rdf.sym(telephoneBlankId),
+                RDF("type")
+              );
+              const telephoneTypeValue = telephoneType
+                ? telephoneType.value.split("#")[1] + "-Phone"
+                : "Phone";
+
+              return [telephoneValue, telephoneBlankId, telephoneTypeValue];
             });
 
           this.setState({
@@ -237,39 +247,43 @@ class Profile extends React.Component {
   }
 
   applyEmailChanges(e) {
-    const oldEmail = e.target.placeholder;
-    const oldEmailBlankId = e.target.id;
+    if (this.state.newEmail !== "") {
+      const oldEmail = e.target.placeholder;
+      const oldEmailBlankId = e.target.id;
 
-    const store = rdf.graph();
-    const updater = new rdf.UpdateManager(store);
+      const store = rdf.graph();
+      const updater = new rdf.UpdateManager(store);
 
-    var del;
-    var ins;
+      var del;
+      var ins;
 
-    del = rdf.st(
-      rdf.sym(oldEmailBlankId),
-      VCARD("value"),
-      rdf.sym("mailto:" + oldEmail),
-      rdf.sym(this.state.webId).doc()
-    );
-    ins = rdf.st(
-      rdf.sym(oldEmailBlankId),
-      VCARD("value"),
-      rdf.sym("mailto:" + this.state.newEmail),
-      rdf.sym(this.state.webId).doc()
-    );
+      del = rdf.st(
+        rdf.sym(oldEmailBlankId),
+        VCARD("value"),
+        rdf.sym("mailto:" + oldEmail),
+        rdf.sym(this.state.webId).doc()
+      );
+      ins = rdf.st(
+        rdf.sym(oldEmailBlankId),
+        VCARD("value"),
+        rdf.sym("mailto:" + this.state.newEmail),
+        rdf.sym(this.state.webId).doc()
+      );
 
-    var updatePromise = new Promise((resolve, reject) => {
-      updater.update(del, ins, (uri, ok, message) => {
-        if (ok) {
-          resolve();
-        } else reject(message);
+      var updatePromise = new Promise((resolve, reject) => {
+        updater.update(del, ins, (uri, ok, message) => {
+          if (ok) {
+            resolve();
+          } else reject(message);
+        });
       });
-    });
-    updatePromise.then(() => {
+      updatePromise.then(() => {
+        this.setState({ editEmail: false });
+        this.fetchUser();
+      });
+    } else {
       this.setState({ editEmail: false });
-      this.fetchUser();
-    });
+    }
   }
 
   getNewEmail(e) {
@@ -322,39 +336,43 @@ class Profile extends React.Component {
   }
 
   applyTelephoneChanges(e) {
-    const oldTelephone = e.target.placeholder;
-    const oldTelephoneBlankId = e.target.id;
-
-    const store = rdf.graph();
-    const updater = new rdf.UpdateManager(store);
-
-    var del;
-    var ins;
-
-    del = rdf.st(
-      rdf.sym(oldTelephoneBlankId),
-      VCARD("value"),
-      rdf.sym("tel:" + oldTelephone),
-      rdf.sym(this.state.webId).doc()
-    );
-    ins = rdf.st(
-      rdf.sym(oldTelephoneBlankId),
-      VCARD("value"),
-      rdf.sym("tel:" + this.state.newTelephone),
-      rdf.sym(this.state.webId).doc()
-    );
-
-    var updatePromise = new Promise((resolve, reject) => {
-      updater.update(del, ins, (uri, ok, message) => {
-        if (ok) {
-          resolve();
-        } else reject(message);
+    if (this.state.newTelephone !== ""){
+      const oldTelephone = e.target.placeholder;
+      const oldTelephoneBlankId = e.target.id;
+  
+      const store = rdf.graph();
+      const updater = new rdf.UpdateManager(store);
+  
+      var del;
+      var ins;
+  
+      del = rdf.st(
+        rdf.sym(oldTelephoneBlankId),
+        VCARD("value"),
+        rdf.sym("tel:" + oldTelephone),
+        rdf.sym(this.state.webId).doc()
+      );
+      ins = rdf.st(
+        rdf.sym(oldTelephoneBlankId),
+        VCARD("value"),
+        rdf.sym("tel:" + this.state.newTelephone),
+        rdf.sym(this.state.webId).doc()
+      );
+  
+      var updatePromise = new Promise((resolve, reject) => {
+        updater.update(del, ins, (uri, ok, message) => {
+          if (ok) {
+            resolve();
+          } else reject(message);
+        });
       });
-    });
-    updatePromise.then(() => {
+      updatePromise.then(() => {
+        this.setState({ editTelephone: false });
+        this.fetchUser();
+      });
+    } else {
       this.setState({ editTelephone: false });
-      this.fetchUser();
-    });
+    }
   }
 
   getNewTelephone(e) {
