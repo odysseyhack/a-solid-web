@@ -21,10 +21,10 @@ class FriendsProfile extends React.Component {
         this.state = {
             friendsWebId: "",
             webId: "",
-            friendsName: "",
+            name: "",
             // picture: "",
-            // emails: [],
-            friendsJob: "",
+            emails: [],
+            job: "",
             // bio: ""
 
         };
@@ -77,11 +77,11 @@ class FriendsProfile extends React.Component {
             <div>
                 <Row>
                     <Col>
-                        <FriendsProfilePicture friendsPicture={this.state.friendsPicture} />
+                        <FriendsProfilePicture friendsPicture={this.state.picture} />
                         <p>{this.state.friendsWebId}</p>
-                        <FriendsNameSlot friendsName={this.state.friendsName}/>
-                        <FriendsJobSlot friendsJob={this.state.friendsJob} />
-                        <FriendsEmailSlot email={this.state.email}/>
+                        <FriendsNameSlot name={this.state.name}/>
+                        <FriendsJobSlot job={this.state.job} />
+                        {/* <FriendsEmailSlot email={this.state.email}/> */}
                     </Col>
                 </Row>
             </div>

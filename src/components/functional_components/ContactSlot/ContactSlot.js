@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "react-bootstrap/Image";
-import NavLink from "react-bootstrap/NavLink"
 import { Typography, ListItem } from "yoda-design-system";
 
 const ContactSlot = props => {
