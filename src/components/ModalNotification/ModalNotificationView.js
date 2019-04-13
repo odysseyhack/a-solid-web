@@ -10,7 +10,7 @@ class ModalNotificationView extends React.Component {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered>
-        <Iframe url="https://a-solid-web.github.io/profile-viewer-react/overview"
+        <Iframe url="https://a-solid-web.github.io/profile-viewer-react/"
         height="800px"
         width="800px"
         position="relative"

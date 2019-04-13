@@ -94,7 +94,7 @@ class Start extends Component {
         >
           <Row>
             <Button variant="primary" onClick={this.toggleModal.bind(this)}>
-              Give Permission
+              Give Permission with SOIL
             </Button>
           </Row>
         </div>
