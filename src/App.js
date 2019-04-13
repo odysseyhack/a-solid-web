@@ -14,8 +14,9 @@ class App extends React.Component {
       <div>
         <Navigation />
         <Switch>
-          <Route path="/" render={() => <Start /> } exact />
+          <Route path="/heath-app" render={() => <Start /> } exact />
           <Route path="/getuser" render= {() => <GetUser /> } exact /> 
+          <Route path="/" render={() => <Start /> } exact />
         </Switch>
       </div>
     </BrowserRouter>  
