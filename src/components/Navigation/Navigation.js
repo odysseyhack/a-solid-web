@@ -15,7 +15,7 @@ const Navigation = () => {
           </Navbar.Brand>
           <Nav className="mr-auto">
             <NavLink 
-              to="/heath-app" 
+              to="/health-app/" 
               style={{ color: "#000", marginLeft: "25%" }}>
               Healthcase
             </NavLink>

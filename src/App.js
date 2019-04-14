@@ -14,9 +14,9 @@ class App extends React.Component {
       <div>
         <Navigation />
         <Switch>
-          <Route path="/heath-app" render={() => <Start /> } exact />
+          <Route path="/health-app/" render={() => <Start /> } exact />
           <Route path="/getuser" render= {() => <GetUser /> } exact /> 
-          <Route path="/" render={() => <Start /> } exact />
+          <Route path="/" render= {() => <Start /> } exact /> 
         </Switch>
       </div>
     </BrowserRouter>  
