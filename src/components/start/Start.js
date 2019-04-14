@@ -30,7 +30,6 @@ class Start extends Component {
         this.setState({
           webId: webId,
           access: false
-          
         });
       }
     });
@@ -38,20 +37,20 @@ class Start extends Component {
 
   toggleModal() {
     if (!this.state.modalShow) {
-      const source = "https://malte18.solid.community/health/architecture-864367_1920.jpg";
-      
-      this.httpGetAsync(source); 
+      const source =
+        "https://malte18.solid.community/health/architecture-864367_1920.jpg";
+
+      this.httpGetAsync(source);
       // this.fetchImage();
     }
     if (!this.state.access) {
       this.sendNotification();
       this.checkForAccess();
-      
     }
     this.setState({ modalShow: !this.state.modalShow });
   }
 
-  checkForAccess(){
+  checkForAccess() {
     console.log("check for access");
     console.log(this.state.access);
     // while(this.state.access == false) {
@@ -61,19 +60,18 @@ class Start extends Component {
     // }
   }
 
-
-  httpGetAsync(source){
+  httpGetAsync(source) {
     var xmlHttp = new XMLHttpRequest();
     console.log("check for access");
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-            // this.updateAccessState(true);
-            this.setState({access: true});
-        }
-    }
-    xmlHttp.open("GET", source, true); // true for asynchronous 
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        // this.updateAccessState(true);
+        this.setState({ access: true });
+      }
+    };
+    xmlHttp.open("GET", source, true); // true for asynchronous
     xmlHttp.send(null);
-  } 
+  }
 
   // fetchImage(){
   //   const source = "https://malte18.solid.community/health/architecture-864367_1920.jpg"
@@ -89,26 +87,42 @@ class Start extends Component {
   // }
 
   updateAccessState(state) {
-    this.setState({access: state})
+    this.setState({ access: state });
   }
   sendNotification() {
     const inboxAddress = this.state.webId.replace("profile/card#me", "inbox");
-    
+
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 
-    let createTurtle = `
-        @prefix : <#>.
-        @prefix inbox: <./>.
-        @prefix solid: <http://www.w3.org/ns/solid/terms#>.
-        @prefix as: <http://www.w3.org/ns/activitystreams#>.
-        @prefix PREQ: <https://a-solid-web.github.io/permission-ontology/permissionrequests.rdf#> .
-        
-        <> a solid:Notification , as:Announce, PREQ:DataRequest;
-          PREQ:requestDataType PREQ:HealthData;
-          PREQ:requests <https://malte18.solid.community/health>;
-          PREQ:requestFrom <http://localhost:3000>.
-        `;
+    let createTurtle =
+      `
+    @prefix : <#>.
+    @prefix inbox: <./>.
+    @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+    @prefix as: <http://www.w3.org/ns/activitystreams#>.
+    @prefix PREQ: <https://a-solid-web.github.io/permission-ontology/permissionrequests.rdf#> .
+    
+    <> a solid:Notification , as:Announce, PREQ:DataRequest;
+      PREQ:requestDataType PREQ:HealthData;
+      PREQ:hasIntent PREQ:DataAnalysis;
+      PREQ:hasStatus "";
+      PREQ:wasSentOn "` +
+      new Date().toDateString() +
+      `";
+      PREQ:expires "` +
+      new Date("July 15, 2019").toDateString() +
+      `";
+      PREQ:privacyRisklevel "high"@en;
+      PREQ:financialRisklevel "high"@en;
+      PREQ:legalRisklevel "medium"@en;
+      PREQ:requests <` +
+      this.state.webId.replace("profile/card#me", "health/") +
+      `>;
+      PREQ:requestFrom <` +
+      window.location.href +
+      `>.
+    `;
 
     //When deleting use DELETE instead of INSERT
     const options = {
@@ -118,7 +132,7 @@ class Start extends Component {
     };
     fetcher.webOperation("POST", inboxAddress, options);
     console.log("sent notification");
-  };
+  }
 
   componentDidMount() {
     this.fetchUser();
@@ -155,7 +169,13 @@ class Start extends Component {
         <ModalNotificationView
           show={this.state.modalShow}
           onHide={this.toggleModal.bind(this)}
-          style={{display:"flex", width:"100%", height:"100%", justifyContent:'center', alignItems:'center'}}
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
         />
       </Container>
     );
