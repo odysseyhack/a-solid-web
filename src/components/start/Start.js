@@ -10,7 +10,8 @@ class Start extends Component {
     super(props);
     this.state = {
       modalShow: false,
-      webId: ""
+      webId: "",
+      access: false
     };
   }
 
@@ -24,8 +25,12 @@ class Start extends Component {
 
         const store = rdf.graph();
 
+        this.fetchImage();
+
         this.setState({
-          webId: webId
+          webId: webId,
+          access: false
+          
         });
       }
     });
@@ -33,14 +38,62 @@ class Start extends Component {
 
   toggleModal() {
     if (!this.state.modalShow) {
+      const source = "https://malte18.solid.community/health/architecture-864367_1920.jpg";
+      
+      this.httpGetAsync(source); 
+      // this.fetchImage();
+    }
+    if (!this.state.access) {
       this.sendNotification();
+      this.checkForAccess();
+      
     }
     this.setState({ modalShow: !this.state.modalShow });
   }
 
-  sendNotification = () => {
-    const inboxAddress = this.state.webId.replace("profile/card#me", "inbox");
+  checkForAccess(){
+    console.log("check for access");
+    console.log(this.state.access);
+    // while(this.state.access == false) {
+    //   const source = "https://malte18.solid.community/health/architecture-864367_1920.jpg";
+    //   setTimeout(this.httpGetAsync(source), 500);
+    //   // setTimeout(this.fetchImage(), 1000);
+    // }
+  }
 
+
+  httpGetAsync(source){
+    var xmlHttp = new XMLHttpRequest();
+    console.log("check for access");
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            // this.updateAccessState(true);
+            this.setState({access: true});
+        }
+    }
+    xmlHttp.open("GET", source, true); // true for asynchronous 
+    xmlHttp.send(null);
+  } 
+
+  // fetchImage(){
+  //   const source = "https://malte18.solid.community/health/architecture-864367_1920.jpg"
+  //   fetch(source).then(res => {
+  //     console.log("WWWW")
+  //     console.log(res)
+  //     if (res.status === 401) {
+  //       this.setState({access: false});
+  //     } else {
+  //       this.setState({access: true});
+  //     }
+  //   });
+  // }
+
+  updateAccessState(state) {
+    this.setState({access: state})
+  }
+  sendNotification() {
+    const inboxAddress = this.state.webId.replace("profile/card#me", "inbox");
+    
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 
@@ -53,8 +106,8 @@ class Start extends Component {
         
         <> a solid:Notification , as:Announce, PREQ:DataRequest;
           PREQ:requestDataType PREQ:HealthData;
-          PREQ:requests <https://ludwigschubert.solid.community/private/health>;
-          PREQ:requestFrom <https://malte18.solid.community/profile/card#me>.
+          PREQ:requests <https://malte18.solid.community/health>;
+          PREQ:requestFrom <http://localhost:3000>.
         `;
 
     //When deleting use DELETE instead of INSERT
@@ -64,6 +117,7 @@ class Start extends Component {
       body: createTurtle
     };
     fetcher.webOperation("POST", inboxAddress, options);
+    console.log("sent notification");
   };
 
   componentDidMount() {
